@@ -1,5 +1,12 @@
 import React, {Component} from 'react'
-import {Navigator, View, Text, BackAndroid, StatusBar} from 'react-native';
+import {
+   Navigator,
+   View,
+   Text,
+   BackAndroid,
+   StatusBar,
+   Button
+} from 'react-native';
 import * as asyncApi from './libs/asyncApi.js';
 import * as storage from './libs/storage.js';
 
@@ -61,10 +68,16 @@ export default class App extends Component {
             return route.sceneConfig;
          }
          return Navigator.SceneConfigs.FloatFromRight;
+      }} onDidFocus={(route) => {
+         if (!route.didFocus) {
+            route.didFocus = true;
+            route.navigator.immediatelyResetRouteStack([route]);
+         }
       }}/>);
    }
 
    renderScene(route, navigator) {
+      route.navigator = navigator;
       if (!route.params)
          route.params = {};
 

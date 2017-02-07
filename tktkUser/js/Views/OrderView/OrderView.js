@@ -7,7 +7,7 @@ export default class OrderView extends Component {
    getAction() {
       return {
          showView: (title) => {
-            this.props.navigator.replace({title: title});
+            this.props.navigator.push({title: title});
          }
       };
    }
@@ -20,7 +20,7 @@ export default class OrderView extends Component {
       const actions = this.getAction();
 
       return (
-         <View>
+         <View style={styles.container}>
             <Text>{this.getText('label_order')}</Text>
             <Button onPress={actions.showView.bind(this, 'ListRestoView')} title={this.getText('label_listresto')} color="blue"/>
          </View>
@@ -28,4 +28,9 @@ export default class OrderView extends Component {
    }
 }
 
-var styles = StyleSheet.create({});
+var styles = StyleSheet.create({
+   container: {
+      flex: 1,
+      backgroundColor: 'white'
+   }
+});

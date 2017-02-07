@@ -7,7 +7,7 @@ export default class ListRestoView extends Component {
    getAction() {
       return {
          showView: (title) => {
-            this.props.navigator.replace({title: title});
+            this.props.navigator.push({title: title});
          }
       };
    }
@@ -20,7 +20,7 @@ export default class ListRestoView extends Component {
       const actions = this.getAction();
 
       return (
-         <View>
+         <View style={styles.container}>
             <Text>{this.getText('label_listresto')}</Text>
             <Button onPress={actions.showView.bind(this, 'HomeView')} title={this.getText('label_home')} color="blue"/>
             <Button onPress={actions.showView.bind(this, 'MapRestoView')} title={this.getText('label_mapresto')} color="blue"/>
@@ -31,4 +31,9 @@ export default class ListRestoView extends Component {
    }
 }
 
-var styles = StyleSheet.create({});
+var styles = StyleSheet.create({
+   container: {
+      flex: 1,
+      backgroundColor: 'white'
+   }
+});

@@ -7,7 +7,7 @@ export default class HomeView extends Component {
    getAction() {
       return {
          showView: (title) => {
-            this.props.navigator.replace({title: title});
+            this.props.navigator.push({title: title});
          }
       };
    }
@@ -20,7 +20,7 @@ export default class HomeView extends Component {
       const actions = this.getAction();
 
       return (
-         <View>
+         <View style={styles.container}>
             <Text>{this.getText('label_home')}</Text>
             <Button onPress={actions.showView.bind(this, "SignUpView")} title={this.getText('label_signup')} color="blue"/>
             <Button onPress={actions.showView.bind(this, "SignInView")} title={this.getText('label_signin')} color="blue"/>
@@ -29,4 +29,9 @@ export default class HomeView extends Component {
    }
 }
 
-var styles = StyleSheet.create({});
+var styles = StyleSheet.create({
+   container: {
+      flex: 1,
+      backgroundColor: 'white'
+   }
+});
