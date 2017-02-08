@@ -1,4 +1,33 @@
 const text = {
+    "SignUpView": {
+        "form_label": {
+            "lastname": "Nom",
+            "firstname": "Prénom",
+            "street": "Rue",
+            "npa": "NPA",
+            "city": "Localité",
+            "tel": "Numéro de téléphone",
+            "email": "Email",
+            "password": "Mot de passe",
+            "confirmpassword": "Confirmez votre mot de passe"
+        },
+        "label_signup_button": "S'inscrire",
+        "error_empty": "Remplissez ce champ",
+        "error_match_password": "Le mot de passe ne correspond pas",
+        "generic_error_message": "Une erreur s'est produite",
+        "text_header": "Créer votre compte"
+    },
+    "SignInView": {
+        "form_label": {
+            "email": "Email",
+            "password": "Mot de passe"
+        },
+        "label_signin_button": "Se connecter",
+        "error_empty": "Remplissez ce champ",
+        "generic_error_message": "Une erreur s'est produite",
+        "text_header": "Se connecter",
+        "label_noaccount_button": "Je n'ai pas de compte"
+    },
     "asyncApi": {
         "not_connected": "Erreur de connexion, assurez-vous d'être connecté et réessayez"
     },
