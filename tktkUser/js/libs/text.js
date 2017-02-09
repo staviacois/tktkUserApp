@@ -22,11 +22,26 @@ const text = {
             "email": "Email",
             "password": "Mot de passe"
         },
+        "menu_label": {
+            "loginview": "Se connecter",
+            "signupview": "Créer votre compte",
+            "listrestoview": "Liste des restaurants"
+        },
         "label_signin_button": "Se connecter",
         "error_empty": "Remplissez ce champ",
         "generic_error_message": "Une erreur s'est produite",
         "text_header": "Se connecter",
         "label_noaccount_button": "Je n'ai pas de compte"
+    },
+    "ListRestoView": {
+        "text_header": "Liste des restaurants",
+        "text_npa": "Indiquez le code postal de l'endroit où vous vous situez",
+        "label_npa": "NPA",
+        "label_search_button": "Rechercher",
+        "error_empty": "Remplissez ce champ",
+        "error_invalid_npa": "Ce n'est pas un NPA valide",
+        "label_cancel_button": "Retour",
+        "label_details": "Détails"
     },
     "asyncApi": {
         "not_connected": "Erreur de connexion, assurez-vous d'être connecté et réessayez"

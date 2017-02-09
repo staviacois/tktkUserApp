@@ -61,7 +61,7 @@ export default class App extends Component {
 
    render() {
       return (<Navigator initialRoute={{
-         title: 'HomeView',
+         title: 'SignInView',
          index: 0
       }} renderScene={this.renderScene.bind(this)} configureScene={(route) => {
          if (route.sceneConfig) {

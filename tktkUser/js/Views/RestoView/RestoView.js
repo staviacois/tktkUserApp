@@ -1,8 +1,24 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Button} from 'react-native';
+import {
+   StyleSheet,
+   View,
+   Text,
+   Button,
+   ScrollView,
+   TextInput,
+   TouchableHighlight,
+   Alert
+} from 'react-native';
+import {createContainer} from 'react-native-meteor';
+import Article from './Article.js';
 import * as text from '../../libs/text.js';
+import * as asyncApi from '../../libs/asyncApi.js';
 
-export default class RestoView extends Component {
+class Resto extends Component {
+
+   constructor(props) {
+      super(props);
+   }
 
    getAction() {
       return {
@@ -13,7 +29,21 @@ export default class RestoView extends Component {
    }
 
    getText(code) {
-      return text.getText("RestoView." + code);
+      return text.getText("ListRestoView." + code);
+   }
+
+   renderArticles(actions) {
+      const tab = [];
+
+      this.props.articles.forEach((article) => {
+         tab.push(<Article key={article._id} article={article}/>);
+      });
+
+      return (
+         <View style={styles.articlesContainer}>
+            {tab}
+         </View>
+      );
    }
 
    render() {
@@ -21,10 +51,10 @@ export default class RestoView extends Component {
 
       return (
          <View style={styles.container}>
-            <Text>{this.getText('label_resto')}</Text>
-            <Button onPress={actions.showView.bind(this, 'ListRestoView')} title={this.getText('label_listresto')} color="blue"/>
-            <Button onPress={actions.showView.bind(this, 'MapRestoView')} title={this.getText('label_mapresto')} color="blue"/>
-            <Button onPress={actions.showView.bind(this, 'EndOrderView')} title={this.getText('label_endorder')} color="blue"/>
+            <View style={styles.header}>
+               <Text style={styles.headerText}>{this.getText('text_header')}</Text>
+            </View>
+            <ScrollView style={styles.content}>{this.renderArticles(actions)}</ScrollView>
          </View>
       );
    }
@@ -34,5 +64,44 @@ var styles = StyleSheet.create({
    container: {
       flex: 1,
       backgroundColor: 'white'
+   },
+   header: {
+      backgroundColor: 'rgb(230, 50, 12)',
+      height: 55,
+      justifyContent: 'center'
+   },
+   headerText: {
+      color: 'white',
+      textAlign: 'center',
+      fontSize: 20
+   },
+   content: {
+      backgroundColor: 'rgb(238, 238, 238)'
+   },
+   articlesContainer: {
+      margin: 15
    }
 });
+
+export default createContainer(props => {
+
+   const payload = props.params.urlName;
+   const handleSubs = asyncApi.multiSubscribe([
+      {
+         name: 'lineChoose',
+         payload: payload
+      }, {
+         name: 'itemsForPublic',
+         payload: payload
+      }
+   ]);
+
+   const data = {
+      connected: asyncApi.checkConnection(),
+      ready: handleSubs.ready(),
+      line: asyncApi.findOne('lines', {urlname: props.params.urlName}),
+      articles: asyncApi.find('items')
+   }
+
+   return data;
+}, Resto);

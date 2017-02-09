@@ -9,6 +9,7 @@ import {
    TouchableHighlight,
    Alert
 } from 'react-native';
+import SideMenu from 'react-native-side-menu';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
 
@@ -21,7 +22,8 @@ export default class SignInView extends Component {
          email: "",
          password: "",
          emailError: "",
-         passwordError: ""
+         passwordError: "",
+         menuIsOpen: false
       }
    }
 
@@ -50,7 +52,7 @@ export default class SignInView extends Component {
                            email: this.state.email,
                            password: this.state.password
                         }, res);
-                        this.props.navigator.replace({title: 'ListRestoView'});
+                        this.props.navigator.push({title: 'ListRestoView'});
                      } else {
                         Alert.alert('', res.message);
                         this.setState({emailError: "", passwordError: ""});
@@ -63,6 +65,11 @@ export default class SignInView extends Component {
                }
 
                asyncApi.callAsyncServer('login', payload, cbSuccess, cbError, true);
+            }
+         },
+         setMenuIsOpen: (open) => {
+            if (open !== this.state.menuIsOpen) {
+               this.setState({menuIsOpen: open});
             }
          }
       };
@@ -80,14 +87,13 @@ export default class SignInView extends Component {
    }
 
    validateForm() {
-      if (!this.state.email.length || !this.state.password.length) {
+      if (!this.state.email || !this.state.password) {
          this.setState({
             emailError: this.verifyEmpty(this.state.email),
             passwordError: this.verifyEmpty(this.state.password)
          });
          return false;
       }
-
       return true;
    }
 
@@ -107,6 +113,31 @@ export default class SignInView extends Component {
       return styles.formTextInput;
    }
 
+   renderMenu(actions) {
+      return (
+         <ScrollView style={styles.menu} scrollsToTop={false}>
+            <Text onPress={() => actions.setMenuIsOpen(false)} style={[styles.menuText, styles.menuTextActive]}>{this.getText('menu_label.loginview')}</Text>
+            <Text onPress={() => actions.showView('SignUpView')} style={styles.menuText}>{this.getText('menu_label.signupview')}</Text>
+            <Text onPress={() => actions.showView('ListRestoView')} style={styles.menuText}>{this.getText('menu_label.listrestoview')}</Text>
+         </ScrollView>
+      );
+   }
+
+   renderHeader(actions) {
+      return (
+         <View style={styles.header}>
+            <Text style={styles.headerText}>{this.getText('text_header')}</Text>
+            <TouchableHighlight style={styles.menuButton} onPress={() => actions.setMenuIsOpen(true)} underlayColor={'rgb(230, 50, 12)'} activeOpacity={.7}>
+               <View>
+                  <View style={[styles.menuButtonBar, styles.menuButtonBarSpace]}/>
+                  <View style={[styles.menuButtonBar, styles.menuButtonBarSpace]}/>
+                  <View style={styles.menuButtonBar}/>
+               </View>
+            </TouchableHighlight>
+         </View>
+      );
+   }
+
    render() {
       const actions = this.getAction();
 
@@ -117,27 +148,27 @@ export default class SignInView extends Component {
       const passwordStyle = this.renderStyle(this.state.passwordError);
 
       return (
-         <View style={styles.container}>
-            <View style={styles.header}>
-               <Text style={styles.headerText}>{this.getText('text_header')}</Text>
-            </View>
-            <ScrollView style={styles.content}>
-               <View style={styles.formContainer}>
-                  <View style={styles.form}>
-                     <Text style={styles.formLabel}>{this.getText('form_label.email')}</Text>
-                     <TextInput style={emailStyle} onChangeText={(email) => this.setState({email})} value={this.state.email}/>{emailError}
-                     <Text style={styles.formLabel}>{this.getText('form_label.password')}</Text>
-                     <TextInput style={passwordStyle} onChangeText={(password) => this.setState({password})} value={this.state.password} secureTextEntry={true}/>{passwordError}
-                     <TouchableHighlight style={styles.signInButton} onPress={actions.signIn} underlayColor={'#286090'}>
-                        <Text style={styles.signInButtonText}>{this.getText('label_signin_button')}</Text>
-                     </TouchableHighlight>
-                     <TouchableHighlight style={styles.noAccountButton} onPress={actions.showView.bind(this, 'SignUpView')} underlayColor={'#286090'}>
-                        <Text style={styles.noAccountButtonText}>{this.getText('label_noaccount_button')}</Text>
-                     </TouchableHighlight>
+         <SideMenu menu={this.renderMenu(actions)} isOpen={this.state.menuIsOpen} onChange={(isOpen) => actions.setMenuIsOpen(isOpen)}>
+            <View style={styles.container}>
+               {this.renderHeader(actions)}
+               <ScrollView style={styles.content}>
+                  <View style={styles.formContainer}>
+                     <View style={styles.form}>
+                        <Text style={styles.formLabel}>{this.getText('form_label.email')}</Text>
+                        <TextInput style={emailStyle} onChangeText={(email) => this.setState({email})} value={this.state.email}/>{emailError}
+                        <Text style={styles.formLabel}>{this.getText('form_label.password')}</Text>
+                        <TextInput style={passwordStyle} onChangeText={(password) => this.setState({password})} value={this.state.password} secureTextEntry={true}/>{passwordError}
+                        <TouchableHighlight style={styles.signInButton} onPress={actions.signIn} underlayColor={'#286090'}>
+                           <Text style={styles.signInButtonText}>{this.getText('label_signin_button')}</Text>
+                        </TouchableHighlight>
+                        <TouchableHighlight style={styles.noAccountButton} onPress={actions.showView.bind(this, 'SignUpView')} underlayColor={'#286090'}>
+                           <Text style={styles.noAccountButtonText}>{this.getText('label_noaccount_button')}</Text>
+                        </TouchableHighlight>
+                     </View>
                   </View>
-               </View>
-            </ScrollView>
-         </View>
+               </ScrollView>
+            </View>
+         </SideMenu>
       );
    }
 }
@@ -156,6 +187,35 @@ var styles = StyleSheet.create({
       color: 'white',
       textAlign: 'center',
       fontSize: 20
+   },
+   menuButton: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      height: 55,
+      width: 55,
+      justifyContent: 'center'
+   },
+   menuButtonBar: {
+      backgroundColor: 'white',
+      height: 3,
+      marginLeft: 10,
+      marginRight: 10
+   },
+   menuButtonBarSpace: {
+      marginBottom: 4
+   },
+   menu: {
+      backgroundColor: 'rgb(64, 70, 75)'
+   },
+   menuText: {
+      color: 'white',
+      fontSize: 17,
+      padding: 20,
+      fontWeight: '700'
+   },
+   menuTextActive: {
+      color: '#aaa'
    },
    content: {
       backgroundColor: 'rgb(238, 238, 238)'
