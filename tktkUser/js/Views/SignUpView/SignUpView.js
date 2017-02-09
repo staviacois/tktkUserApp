@@ -39,6 +39,30 @@ export default class SignUpView extends Component {
       }
    }
 
+   componentWillMount() {
+      this.props.commonFuncs.onSetTextHeader(this.getText('text_header'));
+      this.props.commonFuncs.onSetMenu(this.renderMenu());
+   }
+
+   renderMenu() {
+      const actions = this.getAction();
+
+      const onPress = (label) => {
+         this.props.commonFuncs.onSetMenuIsOpen(false);
+         if (label) {
+            actions.showView(label);
+         }
+      }
+
+      return (
+         <ScrollView scrollsToTop={false}>
+            <Text onPress={() => onPress('SignInView')} style={styles.menuText}>{this.getText('menu_label.loginview', true)}</Text>
+            <Text onPress={() => onPress()} style={[styles.menuText, styles.menuTextActive]}>{this.getText('menu_label.signupview', true)}</Text>
+            <Text onPress={() => onPress('ListRestoView')} style={styles.menuText}>{this.getText('menu_label.listrestoview', true)}</Text>
+         </ScrollView>
+      );
+   }
+
    getAction() {
       return {
          showView: (title) => {
@@ -132,8 +156,10 @@ export default class SignUpView extends Component {
       };
    }
 
-   getText(code) {
-      return text.getText("SignUpView." + code);
+   getText(code, noPrefix) {
+      return text.getText((noPrefix
+         ? ""
+         : "SignUpView.") + code);
    }
 
    verifyEmpty(text) {
@@ -218,9 +244,6 @@ export default class SignUpView extends Component {
 
       return (
          <View style={styles.container}>
-            <View style={styles.header}>
-               <Text style={styles.headerText}>{this.getText('text_header')}</Text>
-            </View>
             <ScrollView style={styles.content}>
                <View style={styles.formContainer}>
                   <View style={styles.form}>
@@ -237,7 +260,7 @@ export default class SignUpView extends Component {
                      <Text style={styles.formLabel}>{this.getText('form_label.tel')}</Text>
                      <TextInput style={telStyle} onChangeText={(tel) => this.setState({tel})} value={this.state.tel}/>{telError}
                      <Text style={styles.formLabel}>{this.getText('form_label.email')}</Text>
-                     <TextInput style={emailStyle} onChangeText={(email) => this.setState({email})} value={this.state.email}/>{emailError}
+                     <TextInput autoCorrect={false} style={emailStyle} onChangeText={(email) => this.setState({email})} value={this.state.email}/>{emailError}
                      <Text style={styles.formLabel}>{this.getText('form_label.password')}</Text>
                      <TextInput style={passwordStyle} onChangeText={(password) => this.setState({password})} value={this.state.password} secureTextEntry={true}/>{passwordError}
                      <Text style={styles.formLabel}>{this.getText('form_label.confirmpassword')}</Text>
@@ -258,15 +281,14 @@ var styles = StyleSheet.create({
       flex: 1,
       backgroundColor: 'white'
    },
-   header: {
-      backgroundColor: 'rgb(230, 50, 12)',
-      height: 55,
-      justifyContent: 'center'
-   },
-   headerText: {
+   menuText: {
       color: 'white',
-      textAlign: 'center',
-      fontSize: 20
+      fontSize: 17,
+      padding: 20,
+      fontWeight: '700'
+   },
+   menuTextActive: {
+      color: '#aaa'
    },
    content: {
       backgroundColor: 'rgb(238, 238, 238)'

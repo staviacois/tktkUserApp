@@ -22,11 +22,6 @@ const text = {
             "email": "Email",
             "password": "Mot de passe"
         },
-        "menu_label": {
-            "loginview": "Se connecter",
-            "signupview": "Créer votre compte",
-            "listrestoview": "Liste des restaurants"
-        },
         "label_signin_button": "Se connecter",
         "error_empty": "Remplissez ce champ",
         "generic_error_message": "Une erreur s'est produite",
@@ -43,19 +38,17 @@ const text = {
         "label_cancel_button": "Retour",
         "label_details": "Détails"
     },
+    "RestoView": {
+        "text_header": "Restaurant : "
+    },
     "asyncApi": {
         "not_connected": "Erreur de connexion, assurez-vous d'être connecté et réessayez"
     },
-    "label_signin": "Sign in",
-    "label_signup": "Sign up",
-    "label_home": "Home",
-    "label_forgotpsw": "Forgot password",
-    "label_mapresto": "Map resto",
-    "label_account": "Account",
-    "label_resto": "Resto",
-    "label_listresto": "List resto",
-    "label_endorder": "End order",
-    "label_order": "Order"
+    "menu_label": {
+        "loginview": "Se connecter",
+        "signupview": "Créer votre compte",
+        "listrestoview": "Liste des restaurants"
+    }
 }
 
 function getText(code) {

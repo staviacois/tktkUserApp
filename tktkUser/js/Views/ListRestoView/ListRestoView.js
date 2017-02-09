@@ -26,7 +26,29 @@ class SignUpView extends Component {
    }
 
    componentWillMount() {
+      this.props.commonFuncs.onSetTextHeader(this.getText('text_header'));
+      this.props.commonFuncs.onSetMenu(this.renderMenu());
+
       this.searchWithLocation();
+   }
+
+   renderMenu() {
+      const actions = this.getAction();
+
+      const onPress = (label) => {
+         if (label) {
+            actions.showView(label);
+         }
+         this.props.commonFuncs.onSetMenuIsOpen(false);
+      }
+
+      return (
+         <ScrollView scrollsToTop={false}>
+            <Text onPress={() => onPress('SignInView')} style={styles.menuText}>{this.getText('menu_label.loginview', true)}</Text>
+            <Text onPress={() => onPress('SignUpView')} style={styles.menuText}>{this.getText('menu_label.signupview', true)}</Text>
+            <Text onPress={() => onPress()} style={[styles.menuText, styles.menuTextActive]}>{this.getText('menu_label.listrestoview', true)}</Text>
+         </ScrollView>
+      );
    }
 
    getAction() {
@@ -59,8 +81,10 @@ class SignUpView extends Component {
       };
    }
 
-   getText(code) {
-      return text.getText("ListRestoView." + code);
+   getText(code, noPrefix) {
+      return text.getText((noPrefix
+         ? ""
+         : "ListRestoView.") + code);
    }
 
    searchWithLocation() {
@@ -169,9 +193,6 @@ class SignUpView extends Component {
 
       return (
          <View style={styles.container}>
-            <View style={styles.header}>
-               <Text style={styles.headerText}>{this.getText('text_header')}</Text>
-            </View>
             <ScrollView style={styles.content}>{content}</ScrollView>
          </View>
       );
@@ -183,15 +204,14 @@ var styles = StyleSheet.create({
       flex: 1,
       backgroundColor: 'white'
    },
-   header: {
-      backgroundColor: 'rgb(230, 50, 12)',
-      height: 55,
-      justifyContent: 'center'
-   },
-   headerText: {
+   menuText: {
       color: 'white',
-      textAlign: 'center',
-      fontSize: 20
+      fontSize: 17,
+      padding: 20,
+      fontWeight: '700'
+   },
+   menuTextActive: {
+      color: '#aaa'
    },
    content: {
       backgroundColor: 'rgb(238, 238, 238)'
