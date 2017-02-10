@@ -59,6 +59,7 @@ export default class SignUpView extends Component {
             <Text onPress={() => onPress('SignInView')} style={styles.menuText}>{this.getText('menu_label.loginview', true)}</Text>
             <Text onPress={() => onPress()} style={[styles.menuText, styles.menuTextActive]}>{this.getText('menu_label.signupview', true)}</Text>
             <Text onPress={() => onPress('ListRestoView')} style={styles.menuText}>{this.getText('menu_label.listrestoview', true)}</Text>
+            <Text onPress={() => onPress('MapRestoView')} style={styles.menuText}>{this.getText('menu_label.maprestoview', true)}</Text>
          </ScrollView>
       );
    }

@@ -14,7 +14,7 @@ import Article from './Article.js';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
 
-class Resto extends Component {
+class RestoView extends Component {
 
    constructor(props) {
       super(props);
@@ -40,6 +40,7 @@ class Resto extends Component {
             <Text onPress={() => onPress('SignInView')} style={styles.menuText}>{this.getText('menu_label.loginview', true)}</Text>
             <Text onPress={() => onPress('SignUpView')} style={styles.menuText}>{this.getText('menu_label.signupview', true)}</Text>
             <Text onPress={() => onPress('ListRestoView')} style={styles.menuText}>{this.getText('menu_label.listrestoview', true)}</Text>
+            <Text onPress={() => onPress('MapRestoView')} style={styles.menuText}>{this.getText('menu_label.maprestoview', true)}</Text>
          </ScrollView>
       );
    }
@@ -126,4 +127,4 @@ export default createContainer(props => {
    }
 
    return data;
-}, Resto);
+}, RestoView);

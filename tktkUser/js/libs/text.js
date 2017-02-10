@@ -43,13 +43,21 @@ const text = {
     "RestoView": {
         "text_header": "Restaurant : "
     },
+    "MapRestoView": {
+        "text_header": "Carte des restaurants",
+        "error_empty": "Remplissez ce champ",
+        "error_invalid_number": "Insérez un nombre",
+        "label_meters": "Rayon [m] :",
+        "label_button_search": "Valider"
+    },
     "asyncApi": {
         "not_connected": "Erreur de connexion, assurez-vous d'être connecté et réessayez"
     },
     "menu_label": {
         "loginview": "Se connecter",
         "signupview": "Créer votre compte",
-        "listrestoview": "Liste des restaurants"
+        "listrestoview": "Liste des restaurants",
+        "maprestoview": "Carte des restaurants"
     }
 }
 

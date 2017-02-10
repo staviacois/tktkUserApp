@@ -14,14 +14,15 @@ import Resto from './Resto.js';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
 
-class SignUpView extends Component {
+class ListRestoView extends Component {
 
    constructor(props) {
       super(props);
 
       this.state = {
          npa: "1470",
-         npaError: ""
+         npaError: "",
+         pos: null
       }
    }
 
@@ -31,7 +32,33 @@ class SignUpView extends Component {
       this.props.commonFuncs.onSetTextHeader(this.getText('text_header'));
       this.props.commonFuncs.onSetMenu(this.renderMenu());
 
-      actions.searchWithLocation();
+      navigator.geolocation.getCurrentPosition((pos) => {
+         this.setState({pos: pos});
+         actions.searchWithLocation();
+      }, (err) => {}, {
+         enableHighAccuracy: true,
+         timeout: 20000,
+         maximumAge: 1000
+      });
+
+      this.watchID = navigator.geolocation.watchPosition((pos) => {
+         this.setState({pos: pos});
+         actions.searchWithLocation();
+      }, (err) => {}, {
+         enableHighAccuracy: true,
+         timeout: 20000,
+         maximumAge: 1000
+      });
+   }
+
+   componentWillUnmount() {
+      navigator.geolocation.clearWatch(this.watchID);
+      if (this.state.handleLinesNPASub) {
+         this.state.handleLinesNPASub.stop();
+      }
+      if (this.state.handleLinesSub) {
+         this.state.handleLinesSub.stop();
+      }
    }
 
    renderMenu() {
@@ -49,6 +76,7 @@ class SignUpView extends Component {
             <Text onPress={() => onPress('SignInView')} style={styles.menuText}>{this.getText('menu_label.loginview', true)}</Text>
             <Text onPress={() => onPress('SignUpView')} style={styles.menuText}>{this.getText('menu_label.signupview', true)}</Text>
             <Text onPress={() => onPress()} style={[styles.menuText, styles.menuTextActive]}>{this.getText('menu_label.listrestoview', true)}</Text>
+            <Text onPress={() => onPress('MapRestoView')} style={styles.menuText}>{this.getText('menu_label.maprestoview', true)}</Text>
          </ScrollView>
       );
    }
@@ -60,13 +88,6 @@ class SignUpView extends Component {
          },
          search: () => {
             if (this.validateForm()) {
-               if (this.state.handleLinesNPASub) {
-                  this.state.handleLinesNPASub.stop();
-               }
-               if (this.state.handleLinesSub) {
-                  this.state.handleLinesSub.stop();
-                  this.setState({handleLinesSub: null});
-               }
 
                const payload = {
                   npa: this.state.npa
@@ -77,6 +98,12 @@ class SignUpView extends Component {
                }
 
                const handler = asyncApi.subscribe('linesToTakeATicketWithNpa', payload, onReady);
+               if (this.state.handleLinesNPASub) {
+                  this.state.handleLinesNPASub.stop();
+               }
+               if (this.state.handleLinesSub) {
+                  this.state.handleLinesSub.stop();
+               }
                this.setState({handleLinesNPASub: handler, npaError: ""});
             }
          },
@@ -87,22 +114,21 @@ class SignUpView extends Component {
             }
          },
          searchWithLocation: () => {
-            navigator.geolocation.getCurrentPosition((pos) => {
+            if (this.state.pos) {
+               if (this.state.handleLinesSub) {
+                  this.state.handleLinesSub.stop();
+               }
                const payload = {
-                  lng: pos.coords.longitude,
-                  lat: pos.coords.latitude,
-                  meter: 20 * 1000 * 100
+                  lng: this.state.pos.coords.longitude,
+                  lat: this.state.pos.coords.latitude,
+                  meter: 1000
                }
                const onReady = () => {
                   this.forceUpdate();
                }
                const handler = asyncApi.subscribe('linesToTakeATicket', payload, onReady);
                this.setState({handleLinesSub: handler});
-            }, (err) => {}, {
-               enableHighAccuracy: true,
-               timeout: 20000,
-               maximumAge: 1000
-            });
+            }
          }
       };
    }
@@ -164,7 +190,9 @@ class SignUpView extends Component {
             );
          } else {
             lines = (
-               <Text style={styles.gpsFoundText}>{this.getText('text_gps_not_found')}</Text>
+               <View style={styles.linesNpaContainer}>
+                  <Text style={styles.gpsFoundText}>{this.getText('text_gps_not_found')}</Text>
+               </View>
             );
          }
       }
@@ -301,9 +329,9 @@ var styles = StyleSheet.create({
       margin: 15
    },
    gpsFoundText: {
-     fontWeight: '700',
-     fontSize: 17,
-     marginBottom: 5
+      fontWeight: '700',
+      fontSize: 17,
+      marginBottom: 5
    }
 });
 
@@ -316,4 +344,4 @@ export default createContainer(props => {
 
    return data;
 
-}, SignUpView);
+}, ListRestoView);

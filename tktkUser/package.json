@@ -9,6 +9,7 @@
   "dependencies": {
     "react": "15.4.2",
     "react-native": "0.41.2",
+    "react-native-maps": "git+https://github.com/airbnb/react-native-maps.git#f5bb3df969950a8b6454141decb4c338b95f5780",
     "react-native-meteor": "^1.0.3",
     "react-native-side-menu": "^0.20.1"
   },
