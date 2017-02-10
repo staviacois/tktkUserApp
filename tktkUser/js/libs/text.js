@@ -36,7 +36,9 @@ const text = {
         "error_empty": "Remplissez ce champ",
         "error_invalid_npa": "Ce n'est pas un NPA valide",
         "label_cancel_button": "Retour",
-        "label_details": "Détails"
+        "label_details": "Détails",
+        "text_gps_not_found": "Aucun service détecté dans votre région",
+        "text_gps_found": "service(s) détectés dans votre région :"
     },
     "RestoView": {
         "text_header": "Restaurant : "

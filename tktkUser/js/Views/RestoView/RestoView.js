@@ -21,7 +21,7 @@ class Resto extends Component {
    }
 
    componentWillMount() {
-      this.props.commonFuncs.onSetTextHeader(this.getText('text_header'));
+      this.props.commonFuncs.onSetTextHeader(this.getText('text_header') + this.props.line.linename);
       this.props.commonFuncs.onSetMenu(this.renderMenu());
    }
 
@@ -107,7 +107,7 @@ var styles = StyleSheet.create({
 
 export default createContainer(props => {
 
-   const payload = props.params.urlName;
+   const payload = props.params.line.urlname;
    const handleSubs = asyncApi.multiSubscribe([
       {
          name: 'lineChoose',
@@ -121,7 +121,7 @@ export default createContainer(props => {
    const data = {
       connected: asyncApi.checkConnection(),
       ready: handleSubs.ready(),
-      line: asyncApi.findOne('lines', {urlname: props.params.urlName}),
+      line: asyncApi.findOne('lines', {urlname: props.params.line.urlname}),
       articles: asyncApi.find('items')
    }
 

@@ -26,10 +26,12 @@ class SignUpView extends Component {
    }
 
    componentWillMount() {
+      const actions = this.getAction();
+
       this.props.commonFuncs.onSetTextHeader(this.getText('text_header'));
       this.props.commonFuncs.onSetMenu(this.renderMenu());
 
-      this.searchWithLocation();
+      actions.searchWithLocation();
    }
 
    renderMenu() {
@@ -61,6 +63,10 @@ class SignUpView extends Component {
                if (this.state.handleLinesNPASub) {
                   this.state.handleLinesNPASub.stop();
                }
+               if (this.state.handleLinesSub) {
+                  this.state.handleLinesSub.stop();
+                  this.setState({handleLinesSub: null});
+               }
 
                const payload = {
                   npa: this.state.npa
@@ -75,8 +81,28 @@ class SignUpView extends Component {
             }
          },
          removeSub: () => {
-            this.state.handleLinesNPASub.stop();
-            this.setState({handleLinesNPASub: null});
+            if (this.state.handleLinesNPASub) {
+               this.state.handleLinesNPASub.stop();
+               this.setState({handleLinesNPASub: null});
+            }
+         },
+         searchWithLocation: () => {
+            navigator.geolocation.getCurrentPosition((pos) => {
+               const payload = {
+                  lng: pos.coords.longitude,
+                  lat: pos.coords.latitude,
+                  meter: 20 * 1000 * 100
+               }
+               const onReady = () => {
+                  this.forceUpdate();
+               }
+               const handler = asyncApi.subscribe('linesToTakeATicket', payload, onReady);
+               this.setState({handleLinesSub: handler});
+            }, (err) => {}, {
+               enableHighAccuracy: true,
+               timeout: 20000,
+               maximumAge: 1000
+            });
          }
       };
    }
@@ -85,26 +111,6 @@ class SignUpView extends Component {
       return text.getText((noPrefix
          ? ""
          : "ListRestoView.") + code);
-   }
-
-   searchWithLocation() {
-      navigator.geolocation.getCurrentPosition((pos) => {
-         const payload = {
-            lng: pos.coords.longitude,
-            lat: pos.coords.latitude,
-            meter: 10
-         }
-         const onReady = () => {
-            this.forceUpdate();
-         }
-         // TODO : publication 'linesToTakeATicket' ne fonctionne pas ?
-         //const handler = asyncApi.subscribe('linesToTakeATicket', payload, onReady);
-         //this.setState({handleLinesSub: handler});
-      }, (err) => {}, {
-         enableHighAccuracy: true,
-         timeout: 20000,
-         maximumAge: 1000
-      });
    }
 
    validateForm() {
@@ -141,14 +147,39 @@ class SignUpView extends Component {
       const npaError = this.renderError(this.state.npaError);
       const npaStyle = this.renderStyle(this.state.npaError);
 
+      let lines = null;
+
+      if (this.state.handleLinesSub && this.state.handleLinesSub.ready()) {
+         if (this.props.lines.length) {
+            let tab = [];
+            this.props.lines.forEach((line) => {
+               tab.push(<Resto key={line._id} line={line} navigator={this.props.navigator}/>);
+            });
+
+            lines = (
+               <View style={styles.linesNpaContainer}>
+                  <Text style={styles.gpsFoundText}>{this.props.lines.length + " " + this.getText('text_gps_found')}</Text>
+                  {tab}
+               </View>
+            );
+         } else {
+            lines = (
+               <Text style={styles.gpsFoundText}>{this.getText('text_gps_not_found')}</Text>
+            );
+         }
+      }
+
       return (
-         <View style={styles.formContainer}>
-            <Text style={styles.formLabel}>{this.getText('text_npa')}</Text>
-            <Text style={styles.formLabel}>{this.getText('label_npa')}</Text>
-            <TextInput style={npaStyle} onChangeText={(npa) => this.setState({npa})} value={this.state.npa}/>{npaError}
-            <TouchableHighlight style={styles.searchButton} onPress={actions.search} underlayColor={'#286090'}>
-               <Text style={styles.searchButtonText}>{this.getText('label_search_button')}</Text>
-            </TouchableHighlight>
+         <View>
+            <View style={styles.formContainer}>
+               <Text style={styles.formLabel}>{this.getText('text_npa')}</Text>
+               <Text style={styles.formLabel}>{this.getText('label_npa')}</Text>
+               <TextInput style={npaStyle} onChangeText={(npa) => this.setState({npa})} value={this.state.npa}/>{npaError}
+               <TouchableHighlight style={styles.searchButton} onPress={actions.search} underlayColor={'#286090'}>
+                  <Text style={styles.searchButtonText}>{this.getText('label_search_button')}</Text>
+               </TouchableHighlight>
+            </View>
+            {lines}
          </View>
       );
    }
@@ -160,10 +191,15 @@ class SignUpView extends Component {
          tab.push(<Resto key={line._id} line={line} navigator={this.props.navigator}/>);
       });
 
+      const onBack = () => {
+         actions.removeSub();
+         actions.searchWithLocation();
+      }
+
       return (
          <View style={styles.linesNpaContainer}>
             {tab}
-            <TouchableHighlight style={styles.searchButton} onPress={actions.removeSub} underlayColor={'#286090'}>
+            <TouchableHighlight style={styles.searchButton} onPress={onBack} underlayColor={'#286090'}>
                <Text style={styles.searchButtonText}>{this.getText('label_cancel_button')}</Text>
             </TouchableHighlight>
          </View>
@@ -263,6 +299,11 @@ var styles = StyleSheet.create({
    },
    linesNpaContainer: {
       margin: 15
+   },
+   gpsFoundText: {
+     fontWeight: '700',
+     fontSize: 17,
+     marginBottom: 5
    }
 });
 

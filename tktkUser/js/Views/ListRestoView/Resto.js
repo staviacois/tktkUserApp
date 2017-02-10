@@ -21,11 +21,11 @@ export default class Resto extends Component {
 
    getAction() {
       return {
-         showLine: (urlName) => {
+         showLine: () => {
             this.props.navigator.push({
                title: 'RestoView',
                params: {
-                  urlName: urlName
+                  line: this.props.line
                }
             });
          }
@@ -47,7 +47,7 @@ export default class Resto extends Component {
             <View style={styles.separator}/>
             <Text style={styles.text}>{address.route + " " + address.street_number + ", " + address.postal_code + " " + address.locality}</Text>
             <View style={styles.separator}/>
-            <Text onPress={() => actions.showLine(this.props.line.urlname)} style={[styles.text, styles.textDetails]}>{this.getText('label_details') + " >"}</Text>
+            <Text onPress={() => actions.showLine()} style={[styles.text, styles.textDetails]}>{this.getText('label_details') + " >"}</Text>
          </View>
       );
    }
