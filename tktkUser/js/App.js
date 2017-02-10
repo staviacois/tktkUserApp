@@ -9,7 +9,8 @@ import {
    TouchableHighlight,
    StyleSheet,
    ScrollView,
-   Platform
+   Platform,
+   Animated
 } from 'react-native';
 import SideMenu from 'react-native-side-menu';
 import * as asyncApi from './libs/asyncApi.js';
@@ -143,9 +144,16 @@ export default class App extends Component {
          }
       }}/>);
 
+      const animFunction = (prop, value) => {
+         return Animated.spring(prop, {
+            toValue: value,
+            friction: 10
+         });
+      }
+
       return (
          <View style={styles.superContainer}>
-            <SideMenu menu={this.state.menu} isOpen={this.state.menuIsOpen} onChange={(isOpen) => this.setState({menuIsOpen: isOpen})}>{navBar}{navig}</SideMenu>
+            <SideMenu animationFunction={animFunction} menu={this.state.menu} isOpen={this.state.menuIsOpen} onChange={(isOpen) => this.setState({menuIsOpen: isOpen})}>{navBar}{navig}</SideMenu>
          </View>
       );
    }
