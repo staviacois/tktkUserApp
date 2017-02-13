@@ -59,6 +59,15 @@ class RestoView extends Component {
          : "RestoView.") + code);
    }
 
+   manageLostConnection() {
+      let checkAgainLater = () => {
+         if (!this.props.connected) {
+            asyncApi.defaultErrorAction(this.props.navigator);
+         }
+      }
+      setTimeout(checkAgainLater, 3000);
+   }
+
    renderArticles(actions) {
       const tab = [];
 
@@ -74,6 +83,9 @@ class RestoView extends Component {
    }
 
    render() {
+      if (!this.props.connected)
+         this.manageLostConnection();
+
       const actions = this.getAction();
 
       return (

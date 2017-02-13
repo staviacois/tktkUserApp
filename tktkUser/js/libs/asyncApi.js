@@ -113,8 +113,8 @@ function multiSubscribe(subscriptions) {
    return {ready: r};
 }
 
-function defaultErrorAction(nav) {
-   Alert.alert('', getText('not_connected'));
+function defaultErrorAction(nav){
+   Alert.alert(getText('not_connected_title'), getText('not_connected'));
    nav.replace({title: 'HomeView'});
 }
 

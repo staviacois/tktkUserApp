@@ -51,7 +51,8 @@ const text = {
         "label_button_search": "Valider"
     },
     "asyncApi": {
-        "not_connected": "Erreur de connexion, assurez-vous d'être connecté et réessayez"
+        "not_connected_title": "Erreur de connexion",
+        "not_connected": "Vérifiez votre connexion internet et réessayez."
     },
     "menu_label": {
         "loginview": "Se connecter",

@@ -20,7 +20,9 @@ class ListRestoView extends Component {
       super(props);
 
       this.state = {
-         npa: "1470",
+         npa: props.login
+            ? props.login.npa
+            : "",
          npaError: "",
          pos: null
       }
@@ -139,6 +141,15 @@ class ListRestoView extends Component {
          : "ListRestoView.") + code);
    }
 
+   manageLostConnection() {
+      let checkAgainLater = () => {
+         if (!this.props.connected) {
+            asyncApi.defaultErrorAction(this.props.navigator);
+         }
+      }
+      setTimeout(checkAgainLater, 3000);
+   }
+
    validateForm() {
       if (!this.state.npa) {
          this.setState({npaError: this.getText('error_empty')});
@@ -243,6 +254,9 @@ class ListRestoView extends Component {
    }
 
    render() {
+      if (!this.props.connected)
+         this.manageLostConnection();
+
       const actions = this.getAction();
 
       let content;

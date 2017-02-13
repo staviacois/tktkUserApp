@@ -39,6 +39,9 @@ class MapRestoView extends Component {
       }, (err) => {});
 
       this.watchID = navigator.geolocation.watchPosition((pos) => {
+         console.log("-----");
+         console.log("--------------- GPS frafraichissement");
+         console.log("----------------");
          this.setState({pos: pos});
          actions.searchWithLocation();
       }, (err) => {});
@@ -113,6 +116,15 @@ class MapRestoView extends Component {
          : "MapRestoView.") + code);
    }
 
+   manageLostConnection() {
+      let checkAgainLater = () => {
+         if (!this.props.connected) {
+            asyncApi.defaultErrorAction(this.props.navigator);
+         }
+      }
+      setTimeout(checkAgainLater, 3000);
+   }
+
    getMeters() {
       if (!this.state.meter) {
          this.setState({meterError: true});
@@ -156,6 +168,9 @@ class MapRestoView extends Component {
    }
 
    render() {
+      if (!this.props.connected)
+         this.manageLostConnection();
+
       const actions = this.getAction();
 
       if (this.state.pos) {
