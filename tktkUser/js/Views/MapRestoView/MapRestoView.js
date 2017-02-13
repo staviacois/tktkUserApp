@@ -14,6 +14,7 @@ import MapView from 'react-native-maps';
 import DismissKeyboard from 'dismissKeyboard';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
+import Resto from '../ListRestoView/Resto.js';
 
 class MapRestoView extends Component {
 
@@ -23,7 +24,8 @@ class MapRestoView extends Component {
       this.state = {
          meter: 1000 + "",
          meterError: false,
-         pos: null
+         pos: null,
+         lineToShow: null
       }
    }
 
@@ -98,14 +100,6 @@ class MapRestoView extends Component {
                   this.setState({handleLinesSub: handler});
                }
             }
-         },
-         showLine: (line) => {
-            this.props.navigator.push({
-               title: 'RestoView',
-               params: {
-                  line: line
-               }
-            });
          }
       };
    }
@@ -152,7 +146,7 @@ class MapRestoView extends Component {
       this.props.lines.forEach((line) => {
          if (line.position.loc) {
             const onPress = () => {
-               actions.showLine(line);
+               this.setState({lineToShow: line});
             }
 
             tab.push(<MapView.Marker key={line._id} coordinate={{
@@ -160,7 +154,7 @@ class MapRestoView extends Component {
                latitude: line.position.loc.coordinates[1]
             }} pinColor={line.settings.enable
                ? 'green'
-               : 'red'} title={line.linename} onCalloutPress={onPress}/>);
+               : 'red'} onPress={onPress}/>);
          }
       });
 
@@ -185,6 +179,10 @@ class MapRestoView extends Component {
             ? styles.formInputError
             : styles.formInput;
 
+         const resto = this.state.lineToShow
+            ? (<View style={styles.restoContainer}><Resto line={this.state.lineToShow} navigator={this.props.navigator}/></View>)
+            : null;
+
          return (
             <View style={styles.container}>
                <View style={styles.formContainer}>
@@ -204,6 +202,7 @@ class MapRestoView extends Component {
                }}>
                   {this.renderMarkers(actions, coords)}
                </MapView>
+               {resto}
             </View>
          );
       } else {
@@ -275,6 +274,12 @@ var styles = StyleSheet.create({
       color: 'white',
       textAlign: 'center',
       fontSize: 17
+   },
+   restoContainer: {
+     paddingTop: 15,
+     paddingLeft: 15,
+     paddingRight: 15,
+     backgroundColor: 'rgb(238, 238, 238)'
    }
 });
 
