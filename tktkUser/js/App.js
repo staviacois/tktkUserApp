@@ -90,31 +90,7 @@ export default class App extends Component {
 
    render() {
 
-      let navBar = (
-         <Navigator.NavigationBar style={styles.header} routeMapper={{
-            LeftButton: (route, navigator, index, navState) => {
-               return (
-                  <TouchableHighlight style={styles.menuButton} onPress={() => this.setState({menuIsOpen: true})} underlayColor={'rgb(230, 50, 12)'} activeOpacity={.7}>
-                     <View>
-                        <View style={[styles.menuButtonBar, styles.menuButtonBarSpace]}/>
-                        <View style={[styles.menuButtonBar, styles.menuButtonBarSpace]}/>
-                        <View style={styles.menuButtonBar}/>
-                     </View>
-                  </TouchableHighlight>
-               );
-            },
-            RightButton: (route, navigator, index, navState) => {
-               return null;
-            },
-            Title: (route, navigator, index, navState) => {
-               return (
-                  <Text style={styles.textHeader}>{this.state.textHeader}</Text>
-               );
-            }
-         }}/>
-      );
-
-      navBar = (
+      const navBar = (
          <View style={styles.header}>
             <Text style={styles.headerText}>{this.state.textHeader}</Text>
             <TouchableHighlight style={styles.menuButton} onPress={() => this.setState({menuIsOpen: true})} underlayColor={'rgb(230, 50, 12)'} activeOpacity={.7}>
