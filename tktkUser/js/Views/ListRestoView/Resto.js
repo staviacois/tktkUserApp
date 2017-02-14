@@ -3,12 +3,32 @@ import {
    StyleSheet,
    View,
    Text,
-   Button,
    ScrollView,
    TextInput,
    TouchableHighlight,
-   Alert
+   Alert,
+   PixelRatio
 } from 'react-native';
+import {
+   Container,
+   Header,
+   Content,
+   Title,
+   Icon,
+   List,
+   ListItem,
+   Left,
+   Body,
+   Right,
+   Button,
+   StyleProvider,
+   Input,
+   Label,
+   Item,
+   Form,
+   Card,
+   CardItem
+} from 'native-base';
 import {createContainer} from 'react-native-meteor';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
@@ -42,32 +62,37 @@ export default class Resto extends Component {
       const address = this.props.line.adress;
 
       return (
-         <View style={styles.container}>
-            <Text style={styles.text}>{this.props.line.linename}</Text>
-            <View style={styles.separator}/>
-            <Text style={styles.text}>{address.route + " " + address.street_number + ", " + address.postal_code + " " + address.locality}</Text>
-            <View style={styles.separator}/>
-            <Text onPress={() => actions.showLine()} style={[styles.text, styles.textDetails]}>{this.getText('label_details') + " >"}</Text>
-         </View>
+         <Card style={nativeStyles.container}>
+            <ListItem>
+               <Text style={nativeStyles.linename}>{this.props.line.linename}</Text>
+            </ListItem>
+            <ListItem>
+               <Text >{address.route + " " + address.street_number + ", " + address.postal_code + " " + address.locality}</Text>
+            </ListItem>
+            <ListItem style={nativeStyles.details} onPress={() => actions.showLine()}>
+               <Body style={nativeStyles.detailsBody}>
+                  <Text>{this.getText('label_details')}</Text>
+               </Body>
+               <Right>
+                  <Icon name="arrow-forward"/>
+               </Right>
+            </ListItem>
+         </Card>
       );
    }
 }
 
-var styles = StyleSheet.create({
+var nativeStyles = {
    container: {
-      backgroundColor: 'white',
-      marginBottom: 15
+      margin: 10
    },
-   separator: {
-      height: 2,
-      backgroundColor: '#eee',
-      marginLeft: 13,
-      marginRight: 13
+   details: {
+      borderWidth: 0
    },
-   text: {
-      padding: 13
+   detailsBody: {
+      justifyContent: 'center'
    },
-   textDetails: {
-      textAlign: 'right'
+   linename: {
+      fontWeight: '600'
    }
-});
+};

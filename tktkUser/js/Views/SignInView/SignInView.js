@@ -3,15 +3,34 @@ import {
    StyleSheet,
    View,
    Text,
-   Button,
    ScrollView,
    TextInput,
    TouchableHighlight,
    Alert
 } from 'react-native';
+import {
+   Container,
+   Header,
+   Content,
+   Title,
+   Icon,
+   List,
+   ListItem,
+   Left,
+   Body,
+   Right,
+   Button,
+   StyleProvider,
+   Input,
+   Label,
+   Item,
+   Form
+} from 'native-base';
 import SideMenu from 'react-native-side-menu';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
+
+import Logo from '../../Components/Logo.js';
 
 export default class SignInView extends Component {
 
@@ -19,21 +38,17 @@ export default class SignInView extends Component {
       super(props);
 
       this.state = {
-         email: "",
-         password: "",
+         email: "test@test.com",
+         password: "123",
          emailError: "",
          passwordError: ""
       }
    }
 
-   componentWillMount() {
-      this.props.commonFuncs.onSetTextHeader(this.getText('text_header'));
-   }
-
    getAction() {
       return {
-         showView: (title) => {
-            this.props.navigator.push({title: title});
+         showView: (title, anim) => {
+            this.props.navigator.push({title: title, anim: anim});
          },
          signIn: () => {
             if (this.validateForm()) {
@@ -50,7 +65,7 @@ export default class SignInView extends Component {
                      this.setState({emailError: "", passwordError: ""});
                   } else {
                      if (!res.problem) {
-                        this.setState({email: "", password: "", emailError: "", passwordError: ""});
+                        this.setState({emailError: "", passwordError: ""});
                         this.props.onSignIn({
                            email: this.state.email,
                            password: this.state.password
@@ -100,17 +115,10 @@ export default class SignInView extends Component {
    renderError(error) {
       if (error) {
          return (
-            <Text style={styles.errorLabel}>{error}</Text>
+            <Text style={nativeStyles.errorLabel}>{error}</Text>
          );
       }
       return null;
-   }
-
-   renderStyle(error) {
-      if (error) {
-         return styles.formTextInputError;
-      }
-      return styles.formTextInput;
    }
 
    render() {
@@ -119,103 +127,82 @@ export default class SignInView extends Component {
       const emailError = this.renderError(this.state.emailError);
       const passwordError = this.renderError(this.state.passwordError);
 
-      const emailStyle = this.renderStyle(this.state.emailError);
-      const passwordStyle = this.renderStyle(this.state.passwordError);
-
       const onSubmit = () => {
          if (this.state.email && this.state.password) {
             actions.signIn();
          }
       };
 
+      const boolError = function(error) {
+         return error
+            ? true
+            : false;
+      }
+
       return (
-         <View style={styles.container}>
-            <ScrollView style={styles.content}>
-               <View style={styles.formContainer}>
-                  <View style={styles.form}>
-                     <Text style={styles.formLabel}>{this.getText('form_label.email')}</Text>
-                     <TextInput onSubmitEditing={onSubmit} autoCorrect={false} style={emailStyle} onChangeText={(email) => this.setState({email})} value={this.state.email}/>{emailError}
-                     <Text style={styles.formLabel}>{this.getText('form_label.password')}</Text>
-                     <TextInput onSubmitEditing={onSubmit} style={passwordStyle} onChangeText={(password) => this.setState({password})} value={this.state.password} secureTextEntry={true}/>{passwordError}
-                     <TouchableHighlight style={styles.signInButton} onPress={actions.signIn} underlayColor={'#286090'}>
-                        <Text style={styles.signInButtonText}>{this.getText('label_signin_button')}</Text>
-                     </TouchableHighlight>
-                     <TouchableHighlight style={styles.noAccountButton} onPress={actions.showView.bind(this, 'SignUpView')} underlayColor={'#286090'}>
-                        <Text style={styles.noAccountButtonText}>{this.getText('label_noaccount_button')}</Text>
-                     </TouchableHighlight>
-                  </View>
+         <Container>
+            <Header>
+               <Left>
+                  <Button onPress={() => actions.showView('HomeView', 1)} transparent>
+                     <Icon name='arrow-back'/>
+                  </Button>
+               </Left>
+               <Body>
+                  <Title>{this.getText('text_header')}</Title>
+               </Body>
+               <Right/>
+            </Header>
+            <Content>
+               <View style={nativeStyles.logoContainer}>
+                  <Logo/>
                </View>
-            </ScrollView>
-         </View>
+               <Form>
+                  <Item error={boolError(emailError)}>
+                     <Input placeholder={this.getText('form_label.email')} onSubmitEditing={onSubmit} autoCorrect={false} onChangeText={(email) => this.setState({email, emailError: ""})} value={this.state.email}/>{emailError}
+                  </Item>
+                  <Item error={boolError(passwordError)}>
+                     <Input placeholder={this.getText('form_label.password')} onSubmitEditing={onSubmit} onChangeText={(password) => this.setState({password, passwordError: ""})} value={this.state.password} secureTextEntry={true}/>{passwordError}
+                  </Item>
+                  <Button style={nativeStyles.signInButton} info onPress={actions.signIn}>
+                     <Text style={nativeStyles.buttonTextWhite}>{this.getText('label_signin_button')}</Text>
+                  </Button>
+                  <Button style={nativeStyles.noAccountButton} light onPress={() => actions.showView('ForgotPswView')}>
+                     <Text style={nativeStyles.buttonText}>{this.getText('label_forgotten_password')}</Text>
+                  </Button>
+               </Form>
+            </Content>
+         </Container>
       );
    }
 }
 
-var styles = StyleSheet.create({
-   container: {
-      flex: 1,
-      backgroundColor: 'white'
-   },
-   content: {
-      backgroundColor: 'rgb(238, 238, 238)'
-   },
-   formContainer: {
-      margin: 15,
-      paddingLeft: 15,
-      paddingRight: 15,
-      paddingBottom: 15,
-      backgroundColor: 'white',
-      borderWidth: 4,
-      borderColor: 'rgb(238, 238, 238)',
-      borderStyle: 'dotted'
-   },
-   formLabel: {
-      marginBottom: 5,
-      marginTop: 15
-   },
-   formTextInput: {
-      height: 35,
-      borderColor: '#eee',
-      borderWidth: 1,
-      paddingLeft: 10
-   },
-   formTextInputError: {
-      height: 35,
-      borderColor: 'rgb(217, 83, 79)',
-      borderWidth: 1,
-      borderRadius: 3,
-      paddingLeft: 10
-   },
-   signInButton: {
-      backgroundColor: '#337ab7',
-      borderWidth: 1,
-      borderColor: 'rgb(32, 77, 116)',
-      borderRadius: 6,
-      height: 40,
-      justifyContent: 'center',
-      marginTop: 20
-   },
-   signInButtonText: {
-      color: 'white',
-      textAlign: 'center',
-      fontSize: 20
+var nativeStyles = {
+   logoContainer: {
+      height: 150,
+      marginTop: 20,
+      marginBottom: 80
    },
    errorLabel: {
+      paddingRight: 10,
       color: '#a94442',
       fontWeight: '600'
    },
-   noAccountButton: {
-      backgroundColor: '#337ab7',
-      borderWidth: 1,
-      borderColor: 'rgb(32, 77, 116)',
-      borderRadius: 6,
-      height: 40,
-      justifyContent: 'center',
-      marginTop: 20
+   signInButton: {
+      marginTop: 20,
+      marginBottom: 20,
+      alignSelf: 'center'
    },
-   noAccountButtonText: {
-      color: 'white',
-      textAlign: 'center',
-      fontSize: 20
+   noAccountButton: {
+      marginBottom: 20,
+      alignSelf: 'center'
+   },
+   buttonText: {
+      fontSize: 17,
+      fontWeight: '600'
+   },
+   buttonTextWhite: {
+     fontSize: 19,
+     fontWeight: '700',
+     color: 'white'
    }
-});
+};

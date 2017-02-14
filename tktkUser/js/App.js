@@ -5,17 +5,19 @@ import {
    Text,
    BackAndroid,
    StatusBar,
-   Button,
    TouchableHighlight,
    StyleSheet,
    ScrollView,
    Platform,
    Animated
 } from 'react-native';
+import {Container, Button, Icon, StyleProvider} from 'native-base';
 import SideMenu from 'react-native-side-menu';
 import * as asyncApi from './libs/asyncApi.js';
 import * as storage from './libs/storage.js';
 import * as text from './libs/text.js';
+import getTheme from '../native-base-theme/components';
+import theme from '../native-base-theme/variables/platform.js';
 
 import HomeView from './Views/HomeView';
 import SignUpView from './Views/SignUpView';
@@ -38,13 +40,12 @@ export default class App extends Component {
             email: "",
             password: ""
          },
-         textHeader: "",
          menuIsOpen: false
       };
 
       this.handleSignIn = this.handleSignIn.bind(this);
       this.handleSignOut = this.handleSignOut.bind(this);
-      this.handleSetTextHeader = this.handleSetTextHeader.bind(this);
+      this.handleOpenMenu = this.handleOpenMenu.bind(this);
    }
 
    componentWillMount() {
@@ -71,10 +72,11 @@ export default class App extends Component {
 
    handleSignOut() {
       this.setState({login: null});
+      this.navigator.push({title: 'HomeView', anim: 2});
    }
 
-   handleSetTextHeader(text) {
-      this.setState({textHeader: text});
+   handleOpenMenu() {
+      this.setState({menuIsOpen: true});
    }
 
    handleMenuPress(label, shouldPush) {
@@ -85,30 +87,30 @@ export default class App extends Component {
    }
 
    render() {
-      const menuButton = this.state.login
-         ? (
-            <TouchableHighlight style={styles.menuButton} onPress={() => this.setState({menuIsOpen: true})} underlayColor={'rgb(230, 50, 12)'} activeOpacity={.7}>
-               <View>
-                  <View style={[styles.menuButtonBar, styles.menuButtonBarSpace]}/>
-                  <View style={[styles.menuButtonBar, styles.menuButtonBarSpace]}/>
-                  <View style={styles.menuButtonBar}/>
-               </View>
-            </TouchableHighlight>
-         )
-         : null;
-
-      const navBar = (
-         <View style={styles.header}>
-            <Text style={styles.headerText}>{this.state.textHeader}</Text>
-            {menuButton}
-         </View>
-      );
 
       const navig = (<Navigator initialRoute={{
-         title: 'SignInView'
+         title: 'HomeView'
       }} renderScene={this.renderScene.bind(this)} configureScene={(route) => {
-         if (route.sceneConfig) {
-            return route.sceneConfig;
+         if (route.anim) {
+            switch (route.anim) {
+               case 1:
+                  return {
+                     ...Navigator.SceneConfigs.HorizontalSwipeJumpFromRight,
+                     gestures: {}
+                  };
+                  break;
+               case 2:
+                  return {
+                     ...Navigator.SceneConfigs.VerticalDownSwipeJump,
+                     gestures: {}
+                  };
+                  break;
+               default:
+                  return {
+                     ...Navigator.SceneConfigs.HorizontalSwipeJump,
+                     gestures: {}
+                  };
+            }
          }
          return {
             ...Navigator.SceneConfigs.HorizontalSwipeJump,
@@ -134,7 +136,9 @@ export default class App extends Component {
 
       return (
          <View style={styles.superContainer}>
-            <SideMenu disableGestures={!this.state.login} animationFunction={animFunction} menu={menu} isOpen={this.state.menuIsOpen} onChange={(isOpen) => this.setState({menuIsOpen: isOpen})}>{navBar}{navig}</SideMenu>
+            <SideMenu disableGestures={!this.state.login} animationFunction={animFunction} menu={menu} isOpen={this.state.menuIsOpen} onChange={(isOpen) => this.setState({menuIsOpen: isOpen})}>
+               {navig}
+            </SideMenu>
          </View>
       );
    }
@@ -172,41 +176,49 @@ export default class App extends Component {
          route.params = {};
 
       const commonFuncs = {
-         onSetTextHeader: this.handleSetTextHeader
+         onOpenMenu: this.handleOpenMenu
       };
+
+      let content = null;
 
       switch (route.title) {
          case 'HomeView':
-            return (<HomeView navigator={navigator} params={route.params} commonFuncs={commonFuncs}/>);
+            content = (<HomeView navigator={navigator} params={route.params} commonFuncs={commonFuncs}/>);
             break;
          case 'SignUpView':
-            return (<SignUpView navigator={navigator} params={route.params} commonFuncs={commonFuncs}/>);
+            content = (<SignUpView navigator={navigator} params={route.params} commonFuncs={commonFuncs}/>);
             break;
          case 'SignInView':
-            return (<SignInView navigator={navigator} params={route.params} commonFuncs={commonFuncs} onSignIn={this.handleSignIn} lastLogin={this.state.lastLogin}/>);
+            content = (<SignInView navigator={navigator} params={route.params} commonFuncs={commonFuncs} onSignIn={this.handleSignIn} lastLogin={this.state.lastLogin}/>);
             break;
          case 'ForgotPswView':
-            return (<ForgotPswView navigator={navigator} params={route.params} commonFuncs={commonFuncs}/>);
+            content = (<ForgotPswView navigator={navigator} params={route.params} commonFuncs={commonFuncs}/>);
             break;
          case 'ListRestoView':
-            return (<ListRestoView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login} onSignOut={this.handleSignOut}/>);
+            content = (<ListRestoView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login} onSignOut={this.handleSignOut}/>);
             break;
          case 'AccountView':
-            return (<AccountView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login} onSignOut={this.handleSignOut}/>);
+            content = (<AccountView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login} onSignOut={this.handleSignOut}/>);
             break;
          case 'RestoView':
-            return (<RestoView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login}/>);
+            content = (<RestoView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login}/>);
             break;
          case 'MapRestoView':
-            return (<MapRestoView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login} onSignOut={this.handleSignOut}/>);
+            content = (<MapRestoView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login} onSignOut={this.handleSignOut}/>);
             break;
          case 'EndOrderView':
-            return (<EndOrderView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login}/>);
+            content = (<EndOrderView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login}/>);
             break;
          case 'OrderView':
-            return (<OrderView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login}/>);
+            content = (<OrderView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login}/>);
             break;
       }
+
+      return (
+         <StyleProvider style={getTheme(theme)}>
+            {content}
+         </StyleProvider>
+      );
    }
 }
 
@@ -214,40 +226,6 @@ var styles = StyleSheet.create({
    superContainer: {
       flex: 1,
       backgroundColor: 'rgb(64, 70, 75)'
-   },
-   textHeader: {
-      color: 'white',
-      textAlign: 'center',
-      fontSize: 20,
-      fontWeight: '600'
-   },
-   header: {
-      backgroundColor: 'rgb(230, 50, 12)',
-      height: 55,
-      justifyContent: 'center'
-   },
-   headerText: {
-      color: 'white',
-      textAlign: 'center',
-      fontSize: 20,
-      fontWeight: '600'
-   },
-   menuButton: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      height: 55,
-      width: 55,
-      justifyContent: 'center'
-   },
-   menuButtonBar: {
-      backgroundColor: 'white',
-      height: 3,
-      marginLeft: 10,
-      marginRight: 10
-   },
-   menuButtonBarSpace: {
-      marginBottom: 4
    },
    menuText: {
       color: 'white',
@@ -257,5 +235,11 @@ var styles = StyleSheet.create({
    },
    menuTextActive: {
       color: '#aaa'
+   },
+   iconBack: {
+      fontSize: 40,
+      alignSelf: 'center',
+      justifyContent: 'center',
+      alignItems: 'center'
    }
 });

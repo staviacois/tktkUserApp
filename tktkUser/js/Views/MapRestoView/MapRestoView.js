@@ -3,12 +3,34 @@ import {
    StyleSheet,
    View,
    Text,
-   Button,
    ScrollView,
    TextInput,
    TouchableHighlight,
-   Alert
+   Alert,
+   Image,
+   Dimensions
 } from 'react-native';
+import {
+   Container,
+   Header,
+   Content,
+   Title,
+   Icon,
+   List,
+   ListItem,
+   Left,
+   Body,
+   Right,
+   Button,
+   StyleProvider,
+   Input,
+   Label,
+   Item,
+   Form,
+   Card,
+   CardItem,
+   Spinner
+} from 'native-base';
 import {createContainer} from 'react-native-meteor';
 import MapView from 'react-native-maps';
 import DismissKeyboard from 'dismissKeyboard';
@@ -23,6 +45,7 @@ class MapRestoView extends Component {
 
       this.state = {
          meter: 1000 + "",
+         actualMeter: 1000,
          meterError: false,
          pos: null,
          lineToShow: null
@@ -31,8 +54,6 @@ class MapRestoView extends Component {
 
    componentWillMount() {
       const actions = this.getAction();
-
-      this.props.commonFuncs.onSetTextHeader(this.getText('text_header'));
 
       navigator.geolocation.getCurrentPosition((pos) => {
          this.setState({pos: pos});
@@ -55,6 +76,12 @@ class MapRestoView extends Component {
       }
    }
 
+   componentDidUpdate(oldProps, oldState) {
+      if (oldState.actualMeter !== this.state.actualMeter) {
+         this.getAction().searchWithLocation();
+      }
+   }
+
    getAction() {
       return {
          showView: (title) => {
@@ -62,22 +89,20 @@ class MapRestoView extends Component {
          },
          searchWithLocation: () => {
             if (this.state.pos) {
-               const meters = this.getMeters();
-               if (meters) {
-                  const payload = {
-                     lng: this.state.pos.coords.longitude,
-                     lat: this.state.pos.coords.latitude,
-                     meter: meters
-                  }
-                  const onReady = () => {
-                     this.forceUpdate();
-                  }
-                  const handler = asyncApi.subscribe('linesToTakeATicket', payload, onReady);
-                  if (this.state.handleLinesSub) {
-                     this.state.handleLinesSub.stop();
-                  }
-                  this.setState({handleLinesSub: handler});
+               const meters = this.state.actualMeter;
+               const payload = {
+                  lng: this.state.pos.coords.longitude,
+                  lat: this.state.pos.coords.latitude,
+                  meter: meters
                }
+               const onReady = () => {
+                  this.forceUpdate();
+               }
+               const handler = asyncApi.subscribe('linesToTakeATicket', payload, onReady);
+               if (this.state.handleLinesSub) {
+                  this.state.handleLinesSub.stop();
+               }
+               this.setState({handleLinesSub: handler});
             }
          }
       };
@@ -98,7 +123,7 @@ class MapRestoView extends Component {
       setTimeout(checkAgainLater, 3000);
    }
 
-   getMeters() {
+   applyMeter(actions) {
       if (!this.state.meter) {
          this.setState({meterError: true});
          return false;
@@ -110,8 +135,7 @@ class MapRestoView extends Component {
          return false;
       }
 
-      this.setState({meterError: ""});
-      return res;
+      this.setState({meterError: "", actualMeter: res});
    }
 
    renderMarkers(actions, coords) {
@@ -120,7 +144,10 @@ class MapRestoView extends Component {
       tab.push(<MapView.Marker key={1} coordinate={{
          longitude: coords.longitude,
          latitude: coords.latitude
-      }} pinColor={'blue'}/>);
+      }} image={require('../../../images/location.png')} anchor={{
+         x: 0.5,
+         y: 0.5
+      }}/>);
 
       this.props.lines.forEach((line) => {
          if (line.position.loc) {
@@ -146,38 +173,53 @@ class MapRestoView extends Component {
 
       const actions = this.getAction();
 
+      let content = null;
+
       if (this.state.pos) {
          const coords = this.state.pos.coords;
 
          const onSubmit = () => {
             DismissKeyboard();
-            actions.searchWithLocation();
+            this.applyMeter(actions);
          }
 
-         const inputStyle = this.state.meterError
-            ? styles.formInputError
-            : styles.formInput;
-
          const resto = this.state.lineToShow
-            ? (<View style={styles.restoContainer}><Resto line={this.state.lineToShow} navigator={this.props.navigator}/></View>)
+            ? (
+               <View style={nativeStyles.restoContainer}><Resto line={this.state.lineToShow} navigator={this.props.navigator}/></View>
+            )
             : null;
 
-         return (
-            <View style={styles.container}>
-               <View style={styles.formContainer}>
-                  <Text style={styles.formLabel}>{this.getText('label_meters')}</Text>
-                  <TextInput keyboardType={'number-pad'} onSubmitEditing={onSubmit} onChangeText={(meter) => this.setState({meter: meter})} value={this.state.meter} style={inputStyle}/>
-                  <TouchableHighlight onPress={onSubmit} style={styles.formButton} underlayColor={'#286090'}>
-                     <Text style={styles.formButtonText}>{this.getText('label_button_search')}</Text>
-                  </TouchableHighlight>
+         const boolError = function(error) {
+            return error
+               ? true
+               : false;
+         }
+
+         const {width, height} = Dimensions.get('window');
+         const delta = 0.05;
+
+         content = (
+            <View style={nativeStyles.container}>
+               <View style={nativeStyles.formCard}>
+                  <Card>
+                     <CardItem>
+                        <Text>{this.getText('label_meters') + " :"}</Text>
+                        <Form style={nativeStyles.form}>
+                           <Item error={boolError(this.state.meterError)}>
+                              <Input keyboardType={'number-pad'} placeholder={this.getText('label_meters')} onSubmitEditing={onSubmit} onChangeText={(meter) => this.setState({meter, meterError: ""})} value={this.state.meter}/>
+                           </Item>
+                        </Form>
+                        <Button light onPress={onSubmit}>
+                           <Text>{this.getText('label_button_search')}</Text>
+                        </Button>
+                     </CardItem>
+                  </Card>
                </View>
-               <MapView style={{
-                  flex: 1
-               }} initialRegion={{
+               <MapView style={nativeStyles.map} onRegionChangeComplete={() => this.setState({lineToShow: null})} initialRegion={{
                   latitude: coords.latitude,
                   longitude: coords.longitude,
-                  latitudeDelta: 0.05,
-                  longitudeDelta: 0.05
+                  latitudeDelta: delta,
+                  longitudeDelta: delta * width / height
                }}>
                   {this.renderMarkers(actions, coords)}
                </MapView>
@@ -185,73 +227,56 @@ class MapRestoView extends Component {
             </View>
          );
       } else {
-         return (
-            <Text>En attente du GPS</Text>
+         content = (
+            <View style={nativeStyles.container}>
+               <Spinner style={nativeStyles.spinner} color="#909090"/>
+            </View>
          );
       }
+
+      return (
+         <Container>
+            <Header>
+               <Left>
+                  <Button onPress={this.props.commonFuncs.onOpenMenu} transparent>
+                     <Icon name='menu'/>
+                  </Button>
+               </Left>
+               <Body>
+                  <Title>{this.getText('text_header')}</Title>
+               </Body>
+               <Right>
+                  <Button onPress={this.props.onSignOut} transparent>
+                     <Icon name='log-out'/>
+                  </Button>
+               </Right>
+            </Header>
+            {content}
+         </Container>
+      );
    }
 }
 
-var styles = StyleSheet.create({
+var nativeStyles = {
    container: {
       flex: 1,
       backgroundColor: 'white'
    },
-   content: {
-      backgroundColor: 'rgb(238, 238, 238)'
+   spinner: {
+      marginTop: 40
    },
-   formContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      height: 40
-   },
-   formInput: {
-      height: 35,
-      borderColor: '#eee',
-      borderWidth: 1,
-      paddingLeft: 10,
+   form: {
       flex: 1,
-      alignSelf: 'center'
+      paddingRight: 10
    },
-   formInputError: {
-      height: 35,
-      borderColor: 'rgb(217, 83, 79)',
-      borderWidth: 1,
-      borderRadius: 3,
-      paddingLeft: 10,
+   map: {
       flex: 1,
-      alignSelf: 'center'
+      ...StyleSheet.absoluteFillObject
    },
-   formLabel: {
-      fontWeight: '600',
-      paddingLeft: 10,
-      paddingRight: 10,
-      fontSize: 17
-   },
-   formButton: {
-      height: 35,
-      marginLeft: 10,
-      marginRight: 5,
-      paddingLeft: 10,
-      paddingRight: 10,
-      backgroundColor: '#337ab7',
-      borderWidth: 1,
-      borderColor: 'rgb(32, 77, 116)',
-      borderRadius: 6,
-      justifyContent: 'center'
-   },
-   formButtonText: {
-      color: 'white',
-      textAlign: 'center',
-      fontSize: 17
-   },
-   restoContainer: {
-     paddingTop: 15,
-     paddingLeft: 15,
-     paddingRight: 15,
-     backgroundColor: 'rgb(238, 238, 238)'
+   restoMarker: {
+      zIndex: 5
    }
-});
+};
 
 export default createContainer(props => {
 

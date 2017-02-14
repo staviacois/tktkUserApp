@@ -1,4 +1,9 @@
 const text = {
+    "HomeView": {
+        "text_header": "Take a ticket",
+        "label_signin": "Se connecter",
+        "label_signup": "Créer votre compte"
+    },
     "SignUpView": {
         "form_label": {
             "lastname": "Nom",
@@ -14,6 +19,8 @@ const text = {
         "label_signup_button": "S'inscrire",
         "error_empty": "Remplissez ce champ",
         "error_match_password": "Le mot de passe ne correspond pas",
+        "error_invalid_email": "Ce n'est pas un email valide",
+        "error_invalid_npa": "Ce n'est pas un NPA valide",
         "generic_error_message": "Une erreur s'est produite",
         "text_header": "Créer votre compte"
     },
@@ -26,7 +33,7 @@ const text = {
         "error_empty": "Remplissez ce champ",
         "generic_error_message": "Une erreur s'est produite",
         "text_header": "Se connecter",
-        "label_noaccount_button": "Je n'ai pas de compte"
+        "label_forgotten_password": "J'ai oublié mon mot de passe"
     },
     "ListRestoView": {
         "text_header": "Liste des restaurants",
@@ -34,11 +41,11 @@ const text = {
         "label_npa": "NPA",
         "label_search_button": "Rechercher",
         "error_empty": "Remplissez ce champ",
-        "error_invalid_npa": "Ce n'est pas un NPA valide",
+        "error_invalid_npa": "NPA invalide",
         "label_cancel_button": "Retour",
         "label_details": "Détails",
         "text_gps_not_found": "Aucun service détecté dans votre région",
-        "text_gps_found": "service(s) détectés dans votre région :",
+        "text_gps_found": "service(s) détecté(s) dans votre région :",
         "not_found": "Aucun restaurant trouvé"
     },
     "RestoView": {
@@ -48,8 +55,9 @@ const text = {
         "text_header": "Carte des restaurants",
         "error_empty": "Remplissez ce champ",
         "error_invalid_number": "Insérez un nombre",
-        "label_meters": "Rayon [m] :",
-        "label_button_search": "Valider"
+        "label_meters": "Rayon [m]",
+        "label_button_search": "Valider",
+        "waiting_gps": "En attente du GPS..."
     },
     "asyncApi": {
         "not_connected_title": "Erreur de connexion",

@@ -3,12 +3,31 @@ import {
    StyleSheet,
    View,
    Text,
-   Button,
    ScrollView,
    TextInput,
    TouchableHighlight,
    Alert
 } from 'react-native';
+import {
+   Container,
+   Header,
+   Content,
+   Title,
+   Icon,
+   List,
+   ListItem,
+   Left,
+   Body,
+   Right,
+   Button,
+   StyleProvider,
+   Input,
+   Label,
+   Item,
+   Form,
+   Card,
+   CardItem
+} from 'native-base';
 import {createContainer} from 'react-native-meteor';
 import Resto from './Resto.js';
 import * as text from '../../libs/text.js';
@@ -30,8 +49,6 @@ class ListRestoView extends Component {
 
    componentWillMount() {
       const actions = this.getAction();
-
-      this.props.commonFuncs.onSetTextHeader(this.getText('text_header'));
 
       navigator.geolocation.getCurrentPosition((pos) => {
          this.setState({pos: pos});
@@ -146,22 +163,14 @@ class ListRestoView extends Component {
    renderError(error) {
       if (error) {
          return (
-            <Text style={styles.errorLabel}>{error}</Text>
+            <Text style={nativeStyles.errorLabel}>{error}</Text>
          );
       }
       return null;
    }
 
-   renderStyle(error) {
-      if (error) {
-         return styles.formTextInputError;
-      }
-      return styles.formTextInput;
-   }
-
    renderSearch(actions) {
       const npaError = this.renderError(this.state.npaError);
-      const npaStyle = this.renderStyle(this.state.npaError);
 
       let lines = null;
 
@@ -173,30 +182,47 @@ class ListRestoView extends Component {
             });
 
             lines = (
-               <View style={styles.linesNpaContainer}>
-                  <Text style={styles.gpsFoundText}>{this.props.lines.length + " " + this.getText('text_gps_found')}</Text>
+               <Card>
+                  <CardItem>
+                     <Text style={nativeStyles.gpsFoundText}>{this.props.lines.length + " " + this.getText('text_gps_found')}</Text>
+                  </CardItem>
                   {tab}
-               </View>
+               </Card>
             );
          } else {
             lines = (
-               <View style={styles.linesNpaContainer}>
-                  <Text style={styles.gpsFoundText}>{this.getText('text_gps_not_found')}</Text>
-               </View>
+               <Card>
+                  <CardItem>
+                     <Text style={nativeStyles.gpsFoundText}>{this.getText('text_gps_not_found')}</Text>
+                  </CardItem>
+               </Card>
             );
          }
       }
 
+      const boolError = function(error) {
+         return error
+            ? true
+            : false;
+      }
+
       return (
          <View>
-            <View style={styles.formContainer}>
-               <Text style={styles.formLabel}>{this.getText('text_npa')}</Text>
-               <Text style={styles.formLabel}>{this.getText('label_npa')}</Text>
-               <TextInput style={npaStyle} onChangeText={(npa) => this.setState({npa})} value={this.state.npa}/>{npaError}
-               <TouchableHighlight style={styles.searchButton} onPress={actions.search} underlayColor={'#286090'}>
-                  <Text style={styles.searchButtonText}>{this.getText('label_search_button')}</Text>
-               </TouchableHighlight>
-            </View>
+            <Card>
+               <CardItem>
+                  <Text>{this.getText('text_npa')}</Text>
+               </CardItem>
+               <CardItem style={nativeStyles.formContainer}>
+                  <Form style={nativeStyles.form}>
+                     <Item error={boolError(npaError)}>
+                        <Input placeholder={this.getText('label_npa')} onSubmitEditing={actions.search} autoCorrect={false} onChangeText={(npa) => this.setState({npa, npaError: ""})} value={this.state.npa}/>{npaError}
+                     </Item>
+                  </Form>
+                  <Button light onPress={actions.search}>
+                     <Text>{this.getText('label_search_button')}</Text>
+                  </Button>
+               </CardItem>
+            </Card>
             {lines}
          </View>
       );
@@ -215,19 +241,31 @@ class ListRestoView extends Component {
       }
 
       return (
-         <View style={styles.linesNpaContainer}>
+         <View>
             {tab}
-            <TouchableHighlight style={styles.searchButton} onPress={onBack} underlayColor={'#286090'}>
-               <Text style={styles.searchButtonText}>{this.getText('label_cancel_button')}</Text>
-            </TouchableHighlight>
+            <Button style={nativeStyles.buttonBack} block light onPress={onBack}>
+               <Text>{this.getText('label_cancel_button')}</Text>
+            </Button>
          </View>
       );
    }
 
    renderNotFound(actions) {
+      const onBack = () => {
+         actions.removeSub();
+         actions.searchWithLocation();
+      }
+
       return (
-         <View style={styles.formContainer}>
-            <Text>{this.getText('not_found')}</Text>
+         <View>
+            <Card>
+               <CardItem>
+                  <Text>{this.getText('not_found')}</Text>
+               </CardItem>
+            </Card>
+            <Button style={nativeStyles.buttonBack} block light onPress={onBack}>
+               <Text>{this.getText('label_cancel_button')}</Text>
+            </Button>
          </View>
       );
    }
@@ -249,75 +287,48 @@ class ListRestoView extends Component {
       }
 
       return (
-         <View style={styles.container}>
-            <ScrollView style={styles.content}>{content}</ScrollView>
-         </View>
+         <Container>
+            <Header>
+               <Left>
+                  <Button onPress={this.props.commonFuncs.onOpenMenu} transparent>
+                     <Icon name='menu'/>
+                  </Button>
+               </Left>
+               <Body>
+                  <Title>{this.getText('text_header')}</Title>
+               </Body>
+               <Right>
+                  <Button onPress={this.props.onSignOut} transparent>
+                     <Icon name='log-out'/>
+                  </Button>
+               </Right>
+            </Header>
+            <Content>{content}</Content>
+         </Container>
       );
    }
 }
 
-var styles = StyleSheet.create({
-   container: {
-      flex: 1,
-      backgroundColor: 'white'
-   },
-   content: {
-      backgroundColor: 'rgb(238, 238, 238)'
-   },
-   formContainer: {
-      margin: 15,
-      paddingLeft: 15,
-      paddingRight: 15,
-      paddingBottom: 15,
-      backgroundColor: 'white',
-      borderWidth: 4,
-      borderColor: 'rgb(238, 238, 238)',
-      borderStyle: 'dotted'
-   },
-   formLabel: {
-      marginBottom: 5,
-      marginTop: 15
-   },
-   formTextInput: {
-      height: 35,
-      borderColor: '#eee',
-      borderWidth: 1,
-      paddingLeft: 10
-   },
-   formTextInputError: {
-      height: 35,
-      borderColor: 'rgb(217, 83, 79)',
-      borderWidth: 1,
-      borderRadius: 3,
-      paddingLeft: 10
-   },
-   searchButton: {
-      backgroundColor: '#337ab7',
-      borderWidth: 1,
-      borderColor: 'rgb(32, 77, 116)',
-      borderRadius: 6,
-      height: 40,
-      justifyContent: 'center',
-      marginTop: 20
-   },
-   searchButtonText: {
-      color: 'white',
-      textAlign: 'center',
-      fontSize: 20
-   },
+var nativeStyles = {
    errorLabel: {
+      paddingRight: 10,
       color: '#a94442',
       fontWeight: '600'
    },
-   linesNpaContainer: {
-      margin: 15
+   formContainer: {
+      flexDirection: 'row'
+   },
+   form: {
+      flex: 1,
+      paddingRight: 10
    },
    gpsFoundText: {
-      fontWeight: '700',
-      fontSize: 17,
-      marginBottom: 5
+      fontWeight: '700'
+   },
+   buttonBack: {
+      margin: 20
    }
-});
+};
 
 export default createContainer(props => {
 
