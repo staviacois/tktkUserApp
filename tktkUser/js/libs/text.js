@@ -38,7 +38,8 @@ const text = {
         "label_cancel_button": "Retour",
         "label_details": "Détails",
         "text_gps_not_found": "Aucun service détecté dans votre région",
-        "text_gps_found": "service(s) détectés dans votre région :"
+        "text_gps_found": "service(s) détectés dans votre région :",
+        "not_found": "Aucun restaurant trouvé"
     },
     "RestoView": {
         "text_header": "Restaurant : "
@@ -55,10 +56,8 @@ const text = {
         "not_connected": "Vérifiez votre connexion internet et réessayez."
     },
     "menu_label": {
-        "loginview": "Se connecter",
-        "signupview": "Créer votre compte",
-        "listrestoview": "Liste des restaurants",
-        "maprestoview": "Carte des restaurants"
+        "ListRestoView": "Liste des restaurants",
+        "MapRestoView": "Carte des restaurants"
     }
 }
 

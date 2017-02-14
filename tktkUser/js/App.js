@@ -39,15 +39,12 @@ export default class App extends Component {
             password: ""
          },
          textHeader: "",
-         menuIsOpen: false,
-         menu: null
+         menuIsOpen: false
       };
 
       this.handleSignIn = this.handleSignIn.bind(this);
       this.handleSignOut = this.handleSignOut.bind(this);
       this.handleSetTextHeader = this.handleSetTextHeader.bind(this);
-      this.handleSetMenu = this.handleSetMenu.bind(this);
-      this.handleSetMenuIsOpen = this.handleSetMenuIsOpen.bind(this);
    }
 
    componentWillMount() {
@@ -80,19 +77,16 @@ export default class App extends Component {
       this.setState({textHeader: text});
    }
 
-   handleSetMenu(menu) {
-      this.setState({menu: menu});
-   }
-
-   handleSetMenuIsOpen(isOpen) {
-      this.setState({menuIsOpen: isOpen});
+   handleMenuPress(label, shouldPush) {
+      if (shouldPush) {
+         this.navigator.push({title: label});
+      }
+      this.setState({menuIsOpen: false});
    }
 
    render() {
-
-      const navBar = (
-         <View style={styles.header}>
-            <Text style={styles.headerText}>{this.state.textHeader}</Text>
+      const menuButton = this.state.login
+         ? (
             <TouchableHighlight style={styles.menuButton} onPress={() => this.setState({menuIsOpen: true})} underlayColor={'rgb(230, 50, 12)'} activeOpacity={.7}>
                <View>
                   <View style={[styles.menuButtonBar, styles.menuButtonBarSpace]}/>
@@ -100,6 +94,13 @@ export default class App extends Component {
                   <View style={styles.menuButtonBar}/>
                </View>
             </TouchableHighlight>
+         )
+         : null;
+
+      const navBar = (
+         <View style={styles.header}>
+            <Text style={styles.headerText}>{this.state.textHeader}</Text>
+            {menuButton}
          </View>
       );
 
@@ -127,22 +128,51 @@ export default class App extends Component {
          });
       }
 
+      const menu = this.state.login
+         ? this.renderMenu()
+         : null;
+
       return (
          <View style={styles.superContainer}>
-            <SideMenu animationFunction={animFunction} menu={this.state.menu} isOpen={this.state.menuIsOpen} onChange={(isOpen) => this.setState({menuIsOpen: isOpen})}>{navBar}{navig}</SideMenu>
+            <SideMenu disableGestures={!this.state.login} animationFunction={animFunction} menu={menu} isOpen={this.state.menuIsOpen} onChange={(isOpen) => this.setState({menuIsOpen: isOpen})}>{navBar}{navig}</SideMenu>
          </View>
       );
    }
 
+   renderMenu() {
+      const self = this;
+      const tab = [];
+      ["ListRestoView", "MapRestoView"].forEach((elem) => {
+         let shouldPush = true;
+         const elemStyle = [styles.menuText];
+         const currentRoutes = self.navigator.getCurrentRoutes();
+         if (currentRoutes[currentRoutes.length - 1].title === elem) {
+            elemStyle.push(styles.menuTextActive);
+            shouldPush = false;
+         }
+
+         tab.push(
+            <Text key={elem} onPress={() => this.handleMenuPress(elem, shouldPush)} style={elemStyle}>{text.getText('menu_label.' + elem, true)}</Text>
+         );
+      });
+
+      return (
+         <ScrollView scrollsToTop={false}>
+            {tab}
+         </ScrollView>
+      );
+   }
+
    renderScene(route, navigator) {
+
+      this.navigator = navigator;
       route.navigator = navigator;
+
       if (!route.params)
          route.params = {};
 
       const commonFuncs = {
-         onSetTextHeader: this.handleSetTextHeader,
-         onSetMenu: this.handleSetMenu,
-         onSetMenuIsOpen: this.handleSetMenuIsOpen
+         onSetTextHeader: this.handleSetTextHeader
       };
 
       switch (route.title) {
@@ -218,5 +248,14 @@ var styles = StyleSheet.create({
    },
    menuButtonBarSpace: {
       marginBottom: 4
+   },
+   menuText: {
+      color: 'white',
+      fontSize: 17,
+      padding: 20,
+      fontWeight: '700'
+   },
+   menuTextActive: {
+      color: '#aaa'
    }
 });

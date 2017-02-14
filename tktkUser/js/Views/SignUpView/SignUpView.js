@@ -41,27 +41,6 @@ export default class SignUpView extends Component {
 
    componentWillMount() {
       this.props.commonFuncs.onSetTextHeader(this.getText('text_header'));
-      this.props.commonFuncs.onSetMenu(this.renderMenu());
-   }
-
-   renderMenu() {
-      const actions = this.getAction();
-
-      const onPress = (label) => {
-         this.props.commonFuncs.onSetMenuIsOpen(false);
-         if (label) {
-            actions.showView(label);
-         }
-      }
-
-      return (
-         <ScrollView scrollsToTop={false}>
-            <Text onPress={() => onPress('SignInView')} style={styles.menuText}>{this.getText('menu_label.loginview', true)}</Text>
-            <Text onPress={() => onPress()} style={[styles.menuText, styles.menuTextActive]}>{this.getText('menu_label.signupview', true)}</Text>
-            <Text onPress={() => onPress('ListRestoView')} style={styles.menuText}>{this.getText('menu_label.listrestoview', true)}</Text>
-            <Text onPress={() => onPress('MapRestoView')} style={styles.menuText}>{this.getText('menu_label.maprestoview', true)}</Text>
-         </ScrollView>
-      );
    }
 
    getAction() {
@@ -281,15 +260,6 @@ var styles = StyleSheet.create({
    container: {
       flex: 1,
       backgroundColor: 'white'
-   },
-   menuText: {
-      color: 'white',
-      fontSize: 17,
-      padding: 20,
-      fontWeight: '700'
-   },
-   menuTextActive: {
-      color: '#aaa'
    },
    content: {
       backgroundColor: 'rgb(238, 238, 238)'
