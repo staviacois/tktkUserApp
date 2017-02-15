@@ -16,7 +16,7 @@ export default {
   androidRippleColorDark: 'rgba(0, 0, 0, 0.15)',
 
     // Badge
-  badgeBg: '#ED1727',
+  badgeBg: 'green',
   badgeColor: '#fff',
     // New Variable
   badgePadding: (platform === 'ios') ? 3 : 0,
@@ -35,7 +35,7 @@ export default {
   CheckboxIconMarginTop: (platform === 'ios') ? undefined : 1,
   CheckboxFontSize: (platform === 'ios') ? (23 / 0.9) : 18,
   DefaultFontSize: 17,
-  checkboxBgColor: '#039BE5',
+  checkboxBgColor: '#E82C0F',
   checkboxSize: 20,
   checkboxTickColor: '#fff',
 

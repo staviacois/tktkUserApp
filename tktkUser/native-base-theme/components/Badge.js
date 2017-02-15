@@ -29,10 +29,10 @@ export default (variables = variable) => {
       },
       backgroundColor: variables.badgeBg,
       padding: variables.badgePadding,
-      paddingHorizontal: 6,
+      paddingHorizontal: 9,
       alignSelf: 'flex-start',
       borderRadius: 13.5,
-      height: 27,
+      height: 26,
   };
   return badgeTheme;
 };

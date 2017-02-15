@@ -230,11 +230,15 @@ var styles = StyleSheet.create({
    menuText: {
       color: 'white',
       fontSize: 17,
-      padding: 20,
-      fontWeight: '700'
+      height: 60,
+      lineHeight: 60,
+      padding: 0,
+      fontWeight: '700',
+      paddingLeft: 10
    },
    menuTextActive: {
-      color: '#aaa'
+      color: '#aaa',
+      backgroundColor: '#33383C'
    },
    iconBack: {
       fontSize: 40,

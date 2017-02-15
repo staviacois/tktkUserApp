@@ -49,7 +49,10 @@ const text = {
         "not_found": "Aucun restaurant trouvé"
     },
     "RestoView": {
-        "text_header": "Restaurant : "
+        "text_header": "Restaurant : ",
+        "footer_next": "Suivant",
+        "footer_choose": "Choisissez vos plats",
+        "footer_disabled": "Service de commande fermé"
     },
     "MapRestoView": {
         "text_header": "Carte des restaurants",
@@ -58,6 +61,18 @@ const text = {
         "label_meters": "Rayon [m]",
         "label_button_search": "Valider",
         "waiting_gps": "En attente du GPS..."
+    },
+    "EndOrderView": {
+        "text_header": "Restaurant : ",
+        "footer_ordernow": "Commander maintenant",
+        "footer_disabled": "Service de commande fermé",
+        "label_total": "Total à payer : ",
+        "label_order": "Commande",
+        "label_form": "Informations personnelles",
+        "error_empty": "Remplissez ce champ",
+        "label_name": "Nom complet",
+        "label_tel": "Téléphone",
+        "label_deliver": " Je souhaite être livré"
     },
     "asyncApi": {
         "not_connected_title": "Erreur de connexion",

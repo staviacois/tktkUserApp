@@ -95,13 +95,17 @@ class MapRestoView extends Component {
                   lat: this.state.pos.coords.latitude,
                   meter: meters
                }
-               const onReady = () => {
+               const onReady = (oldHandler) => {
+                  if (oldHandler) {
+                     oldHandler.stop();
+                  }
                   this.forceUpdate();
                }
-               const handler = asyncApi.subscribe('linesToTakeATicket', payload, onReady);
-               if (this.state.handleLinesSub) {
-                  this.state.handleLinesSub.stop();
-               }
+
+               const oldHandler = this.state.handleLinesSub;
+
+               const handler = asyncApi.subscribe('linesToTakeATicket', payload, () => onReady(oldHandler));
+
                this.setState({handleLinesSub: handler});
             }
          }
@@ -135,7 +139,7 @@ class MapRestoView extends Component {
          return false;
       }
 
-      this.setState({meterError: "", actualMeter: res});
+      this.setState({meterError: "", actualMeter: res, lineToShow: null});
    }
 
    renderMarkers(actions, coords) {
@@ -182,7 +186,9 @@ class MapRestoView extends Component {
             DismissKeyboard();
             this.applyMeter(actions);
          }
-
+         const pos = this.state.pos
+            ? this.state.pos.coords
+            : null;
          const resto = this.state.lineToShow
             ? (
                <View style={nativeStyles.restoContainer}><Resto line={this.state.lineToShow} navigator={this.props.navigator} from={{
@@ -190,7 +196,7 @@ class MapRestoView extends Component {
                   params: {
                      selected: this.state.lineToShow
                   }
-               }}/></View>
+               }} pos={pos}/></View>
             )
             : null;
 
@@ -287,14 +293,14 @@ var nativeStyles = {
       zIndex: 5
    },
    restoContainer: {
-     position: 'absolute',
-     left: 0,
-     bottom: 0,
-     right: 0
+      position: 'absolute',
+      left: 0,
+      bottom: 0,
+      right: 0
    },
    buttonText: {
-     color: 'white',
-     fontWeight: '700'
+      color: 'white',
+      fontWeight: '700'
    }
 };
 

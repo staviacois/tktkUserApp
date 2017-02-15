@@ -123,18 +123,22 @@ class ListRestoView extends Component {
          },
          searchWithLocation: () => {
             if (this.state.pos) {
-               if (this.state.handleLinesSub) {
-                  this.state.handleLinesSub.stop();
-               }
                const payload = {
                   lng: this.state.pos.coords.longitude,
                   lat: this.state.pos.coords.latitude,
                   meter: 1000
                }
-               const onReady = () => {
+               const onReady = (oldHandler) => {
+                  if (oldHandler) {
+                     oldHandler.stop();
+                  }
                   this.forceUpdate();
                }
-               const handler = asyncApi.subscribe('linesToTakeATicket', payload, onReady);
+
+               const oldHandler = this.state.handleLinesSub;
+
+               const handler = asyncApi.subscribe('linesToTakeATicket', payload, () => onReady(oldHandler));
+
                this.setState({handleLinesSub: handler});
             }
          }
@@ -190,8 +194,11 @@ class ListRestoView extends Component {
             const fromProp = {
                view: "ListRestoView"
             };
+            const pos = this.state.pos
+               ? this.state.pos.coords
+               : null;
             this.props.lines.forEach((line) => {
-               tab.push(<Resto key={line._id} line={line} navigator={this.props.navigator} from={fromProp}/>);
+               tab.push(<Resto key={line._id} line={line} navigator={this.props.navigator} from={fromProp} pos={pos}/>);
             });
 
             lines = (
@@ -249,8 +256,11 @@ class ListRestoView extends Component {
             npa: this.state.npa
          }
       };
+      const pos = this.state.pos
+         ? this.state.pos.coords
+         : null;
       this.props.lines.forEach((line) => {
-         tab.push(<Resto key={line._id} line={line} navigator={this.props.navigator} from={fromProp}/>);
+         tab.push(<Resto key={line._id} line={line} navigator={this.props.navigator} from={fromProp} pos={pos}/>);
       });
 
       const onBack = () => {

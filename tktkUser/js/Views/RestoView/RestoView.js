@@ -26,7 +26,9 @@ import {
    Item,
    Form,
    Card,
-   CardItem
+   CardItem,
+   Footer,
+   FooterTab
 } from 'native-base';
 import {createContainer} from 'react-native-meteor';
 import Article from './Article.js';
@@ -47,6 +49,16 @@ class RestoView extends Component {
          goBack: () => {
             const from = this.props.params.from;
             this.props.navigator.push({title: from.view, anim: 1, params: from.params});
+         },
+         showEndOrder: (recap) => {
+            this.props.navigator.push({
+               title: "EndOrderView",
+               params: {
+                  line: this.props.line,
+                  recap: recap,
+                  from: this.props.params.from
+               }
+            });
          }
       };
    }
@@ -69,8 +81,19 @@ class RestoView extends Component {
    renderArticles(actions) {
       const tab = [];
 
+      const handleRefresh = () => {
+         this.forceUpdate();
+      }
+
       this.props.articles.forEach((article) => {
-         tab.push(<Article key={article._id} article={article}/>);
+         if (!article.count && article.count !== 0) {
+            let newCount = 0;
+            if (this.props.params.recap && this.props.params.recap[article._id]) {
+               newCount = this.props.params.recap[article._id].count;
+            }
+            article.count = newCount;
+         }
+         tab.push(<Article key={article._id} article={article} onRefresh={handleRefresh}/>);
       });
 
       return tab;
@@ -81,6 +104,38 @@ class RestoView extends Component {
          this.manageLostConnection();
 
       const actions = this.getAction();
+
+      let footerEnabled = false;
+      let footerMessage = "";
+
+      if (this.props.line.settings.enable) {
+         this.props.articles.forEach((article) => {
+            if (article.count) {
+               footerEnabled = true;
+            }
+         });
+         if (footerEnabled) {
+            footerMessage = this.getText('footer_next');
+         } else {
+            footerMessage = this.getText('footer_choose');
+         }
+      } else {
+         footerMessage = this.getText('footer_disabled');
+      }
+
+      const footerButtonStyle = !footerEnabled
+         ? nativeStyles.footerButtonDisabled
+         : null;
+
+      const onPress = () => {
+         const recap = {};
+         this.props.articles.forEach((article) => {
+            if (article.available && article.count) {
+               recap[article._id] = article;
+            }
+         });
+         actions.showEndOrder(recap);
+      }
 
       return (
          <Container>
@@ -96,8 +151,25 @@ class RestoView extends Component {
                <Right/>
             </Header>
             <Content>{this.renderArticles(actions)}</Content>
+            <Footer>
+               <Body>
+                  <Button onPress={onPress} disabled={!footerEnabled} info full style={footerButtonStyle}>
+                     <Text style={nativeStyles.footerButtonText}>{footerMessage}</Text>
+                  </Button>
+               </Body>
+            </Footer>
          </Container>
       );
+   }
+}
+
+const nativeStyles = {
+   footerButtonText: {
+      color: 'white',
+      fontWeight: '700'
+   },
+   footerButtonDisabled: {
+      backgroundColor: '#b5b5b5'
    }
 }
 
