@@ -43,6 +43,10 @@ class RestoView extends Component {
       return {
          showView: (title) => {
             this.props.navigator.push({title: title});
+         },
+         goBack: () => {
+            const from = this.props.params.from;
+            this.props.navigator.push({title: from.view, anim: 1, params: from.params});
          }
       };
    }
@@ -82,8 +86,8 @@ class RestoView extends Component {
          <Container>
             <Header>
                <Left>
-                  <Button onPress={this.props.commonFuncs.onOpenMenu} transparent>
-                     <Icon name='menu'/>
+                  <Button onPress={actions.goBack} transparent>
+                     <Icon name='arrow-back'/>
                   </Button>
                </Left>
                <Body>

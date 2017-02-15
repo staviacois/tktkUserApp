@@ -45,7 +45,8 @@ export default class Resto extends Component {
             this.props.navigator.push({
                title: 'RestoView',
                params: {
-                  line: this.props.line
+                  line: this.props.line,
+                  from: this.props.from
                }
             });
          }

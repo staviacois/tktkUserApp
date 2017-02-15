@@ -48,7 +48,7 @@ class MapRestoView extends Component {
          actualMeter: 1000,
          meterError: false,
          pos: null,
-         lineToShow: null
+         lineToShow: props.params.selected || null
       }
    }
 
@@ -185,7 +185,12 @@ class MapRestoView extends Component {
 
          const resto = this.state.lineToShow
             ? (
-               <View style={nativeStyles.restoContainer}><Resto line={this.state.lineToShow} navigator={this.props.navigator}/></View>
+               <View style={nativeStyles.restoContainer}><Resto line={this.state.lineToShow} navigator={this.props.navigator} from={{
+                  view: "MapRestoView",
+                  params: {
+                     selected: this.state.lineToShow
+                  }
+               }}/></View>
             )
             : null;
 
@@ -197,6 +202,12 @@ class MapRestoView extends Component {
 
          const {width, height} = Dimensions.get('window');
          const delta = 0.05;
+
+         const onPress = () => {
+            if (this.state.lineToShow) {
+               this.setState({lineToShow: null});
+            }
+         }
 
          content = (
             <View style={nativeStyles.container}>
@@ -215,7 +226,7 @@ class MapRestoView extends Component {
                      </CardItem>
                   </Card>
                </View>
-               <MapView style={nativeStyles.map} onRegionChangeComplete={() => this.setState({lineToShow: null})} initialRegion={{
+               <MapView style={nativeStyles.map} onPress={onPress} initialRegion={{
                   latitude: coords.latitude,
                   longitude: coords.longitude,
                   latitudeDelta: delta,
@@ -270,8 +281,7 @@ var nativeStyles = {
       paddingRight: 10
    },
    map: {
-      flex: 1,
-      ...StyleSheet.absoluteFillObject
+      flex: 1
    },
    restoMarker: {
       zIndex: 5

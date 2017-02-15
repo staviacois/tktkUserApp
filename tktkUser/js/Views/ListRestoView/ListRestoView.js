@@ -38,10 +38,12 @@ class ListRestoView extends Component {
    constructor(props) {
       super(props);
 
+      const npa = props.params.npa || (props.login
+         ? props.login.npa
+         : "");
+
       this.state = {
-         npa: props.login
-            ? props.login.npa
-            : "",
+         npa: npa,
          npaError: "",
          pos: null
       }
@@ -50,9 +52,15 @@ class ListRestoView extends Component {
    componentWillMount() {
       const actions = this.getAction();
 
+      if (this.props.params.npa) {
+         actions.search();
+      }
+
       navigator.geolocation.getCurrentPosition((pos) => {
-         this.setState({pos: pos});
-         actions.searchWithLocation();
+         if (!this.state.handleLinesNPASub) {
+            this.setState({pos: pos});
+            actions.searchWithLocation();
+         }
       }, (err) => {}, {
          enableHighAccuracy: true,
          timeout: 20000,
@@ -60,8 +68,10 @@ class ListRestoView extends Component {
       });
 
       this.watchID = navigator.geolocation.watchPosition((pos) => {
-         this.setState({pos: pos});
-         actions.searchWithLocation();
+         if (this.state.handleLinesSub && !this.state.handleLinesNPASub) {
+            this.setState({pos: pos});
+            actions.searchWithLocation();
+         }
       }, (err) => {}, {
          enableHighAccuracy: true,
          timeout: 20000,
@@ -177,8 +187,11 @@ class ListRestoView extends Component {
       if (this.state.handleLinesSub && this.state.handleLinesSub.ready()) {
          if (this.props.lines.length) {
             let tab = [];
+            const fromProp = {
+               view: "ListRestoView"
+            };
             this.props.lines.forEach((line) => {
-               tab.push(<Resto key={line._id} line={line} navigator={this.props.navigator}/>);
+               tab.push(<Resto key={line._id} line={line} navigator={this.props.navigator} from={fromProp}/>);
             });
 
             lines = (
@@ -230,9 +243,14 @@ class ListRestoView extends Component {
 
    renderSearchedLines(actions) {
       const tab = [];
-
+      const fromProp = {
+         view: "ListRestoView",
+         params: {
+            npa: this.state.npa
+         }
+      };
       this.props.lines.forEach((line) => {
-         tab.push(<Resto key={line._id} line={line} navigator={this.props.navigator}/>);
+         tab.push(<Resto key={line._id} line={line} navigator={this.props.navigator} from={fromProp}/>);
       });
 
       const onBack = () => {
