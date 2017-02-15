@@ -57,8 +57,8 @@ class ListRestoView extends Component {
       }
 
       navigator.geolocation.getCurrentPosition((pos) => {
+         this.setState({pos: pos});
          if (!this.state.handleLinesNPASub) {
-            this.setState({pos: pos});
             actions.searchWithLocation();
          }
       }, (err) => {}, {
@@ -68,8 +68,8 @@ class ListRestoView extends Component {
       });
 
       this.watchID = navigator.geolocation.watchPosition((pos) => {
+         this.setState({pos: pos});
          if (this.state.handleLinesSub && !this.state.handleLinesNPASub) {
-            this.setState({pos: pos});
             actions.searchWithLocation();
          }
       }, (err) => {}, {
