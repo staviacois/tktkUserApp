@@ -9,7 +9,7 @@ export default (variables = variable) => {
         padding: variables.contentPadding,
       },
       flex: 1,
-      backgroundColor: 'white'
+      backgroundColor: '#eeeeee'
   };
 
   return contentTheme;

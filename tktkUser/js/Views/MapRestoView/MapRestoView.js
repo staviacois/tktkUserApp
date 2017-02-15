@@ -220,8 +220,8 @@ class MapRestoView extends Component {
                               <Input keyboardType={'number-pad'} placeholder={this.getText('label_meters')} onSubmitEditing={onSubmit} onChangeText={(meter) => this.setState({meter, meterError: ""})} value={this.state.meter}/>
                            </Item>
                         </Form>
-                        <Button light onPress={onSubmit}>
-                           <Text>{this.getText('label_button_search')}</Text>
+                        <Button info onPress={onSubmit}>
+                           <Text style={nativeStyles.buttonText}>{this.getText('label_button_search')}</Text>
                         </Button>
                      </CardItem>
                   </Card>
@@ -291,6 +291,10 @@ var nativeStyles = {
      left: 0,
      bottom: 0,
      right: 0
+   },
+   buttonText: {
+     color: 'white',
+     fontWeight: '700'
    }
 };
 

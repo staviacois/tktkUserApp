@@ -105,7 +105,7 @@ export default {
 
       // Color
   brandPrimary: (platform === 'ios') ? '#007aff' : '#3F51B5',
-  brandInfo: '#E82C0F',
+  brandInfo: '#62B1F6',
   brandSuccess: '#5cb85c',
   brandDanger: '#d9534f',
   brandWarning: '#f0ad4e',
@@ -150,16 +150,16 @@ export default {
 
 
     // Header
-  toolbarBtnColor: '#fff',
-  toolbarDefaultBg: '#E82C0F',
+  toolbarBtnColor: (platform === 'ios') ? '#007aff' : '#fff',
+  toolbarDefaultBg: (platform === 'ios') ? '#F8F8F8' : '#3F51B5',
   toolbarHeight: (platform === 'ios') ? 64 : 56,
   toolbarIconSize: (platform === 'ios') ? 20 : 22,
   toolbarSearchIconSize: (platform === 'ios') ? 20 : 23,
-  toolbarInputColor: '#fff',
+  toolbarInputColor: (platform === 'ios') ? '#CECDD2' : '#fff',
   searchBarHeight: (platform === 'ios') ? 30 : 40,
   toolbarInverseBg: '#222',
-  toolbarTextColor: '#fff',
-  toolbarDefaultBorder: '#E72B10',
+  toolbarTextColor: (platform === 'ios') ? '#000' : '#fff',
+  toolbarDefaultBorder: (platform === 'ios') ? '#a7a6ab' : '#3F51B5',
   get statusBarColor() {
     return color(this.toolbarDefaultBg).darken(0.2).hexString();
   },
@@ -174,7 +174,7 @@ export default {
 
     // InputGroup
   inputFontSize: 17,
-  inputBorderColor: '#E82C0F',
+  inputBorderColor: '#D9D5DC',
   inputSuccessBorderColor: '#2b8339',
   inputErrorBorderColor: '#ed2f2f',
 
@@ -204,7 +204,7 @@ export default {
 
 
     // List
-  listBorderColor: '#E82C0F',
+  listBorderColor: '#c9c9c9',
   listDividerBg: '#f4f4f4',
   listItemHeight: 45,
 
@@ -258,10 +258,10 @@ export default {
   titleFontfamily: (platform === 'ios') ? 'System' : 'Roboto_medium',
   titleFontSize: (platform === 'ios') ? 17 : 19,
   subTitleFontSize: (platform === 'ios') ? 12 : 14,
-  subtitleColor: '#FFF',
+  subtitleColor: (platform === 'ios') ? '#8e8e93' : '#FFF',
 
     // New Variable
-  titleFontColor: '#FFF',
+  titleFontColor: (platform === 'ios') ? '#000' : '#FFF',
 
 
     // Other

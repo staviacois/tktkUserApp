@@ -79,7 +79,7 @@ export default (variables = variable) => {
         '.first': {
           paddingTop: variables.listItemPadding + 3,
         },
-        borderBottomWidth: (platform === 'ios') ? variables.borderWidth : null,
+        borderBottomWidth: (platform === 'ios') ? variables.borderWidth * 2 : null,
         marginLeft: null,
         padding: variables.listItemPadding,
         paddingLeft: variables.listItemPadding + 5,
@@ -172,12 +172,12 @@ export default (variables = variable) => {
         'NativeBase.Icon': {
           alignSelf: null,
           fontSize: variables.iconFontSize - 8,
-          color: '#c9c8cd',
+          color: '#E82C0F',
         },
         'NativeBase.IconNB': {
           alignSelf: null,
           fontSize: variables.iconFontSize - 8,
-          color: '#c9c8cd',
+          color: '#E82C0F',
         },
         'NativeBase.Text': {
           '.note': {
@@ -228,7 +228,7 @@ export default (variables = variable) => {
           },
           flex: 1,
           paddingVertical: variables.listItemPadding,
-          borderBottomWidth: variables.borderWidth,
+          borderBottomWidth: variables.borderWidth * 2,
           borderColor: variables.listBorderColor,
           marginLeft: variables.listItemPadding + 5,
         },
@@ -242,7 +242,7 @@ export default (variables = variable) => {
           paddingRight: variables.listItemPadding + 5,
           alignSelf: 'stretch',
           paddingVertical: variables.listItemPadding,
-          borderBottomWidth: variables.borderWidth,
+          borderBottomWidth: variables.borderWidth * 2,
           borderColor: variables.listBorderColor,
         },
         borderBottomWidth: null,
@@ -261,7 +261,7 @@ export default (variables = variable) => {
           },
           flex: 1,
           paddingVertical: variables.listItemPadding + 5,
-          borderBottomWidth: variables.borderWidth,
+          borderBottomWidth: variables.borderWidth * 2,
           borderColor: variables.listBorderColor,
           marginLeft: variables.listItemPadding + 5,
         },
@@ -280,7 +280,7 @@ export default (variables = variable) => {
           alignSelf: 'stretch',
           paddingRight: variables.listItemPadding + 5,
           paddingVertical: variables.listItemPadding + 5,
-          borderBottomWidth: variables.borderWidth,
+          borderBottomWidth: variables.borderWidth * 2,
           borderColor: variables.listBorderColor,
         },
         borderBottomWidth: null,
@@ -296,7 +296,7 @@ export default (variables = variable) => {
           'NativeBase.Right': {
             borderBottomWidth: null,
           },
-          borderBottomWidth: variables.borderWidth,
+          borderBottomWidth: variables.borderWidth * 2,
           borderColor: variables.listBorderColor,
         },
         'NativeBase.Left': {

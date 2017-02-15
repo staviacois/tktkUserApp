@@ -19,11 +19,11 @@ var styles = StyleSheet.create({
    q: {
       fontSize: 130,
       textAlign: 'center',
-      color: '#333'
+      color: '#E90314'
    },
    manager: {
       fontSize: 30,
       textAlign: 'center',
-      color: '#333'
+      color: '#E90314'
    }
 });

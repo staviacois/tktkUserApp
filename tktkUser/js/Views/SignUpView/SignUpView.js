@@ -298,7 +298,7 @@ export default class SignUpView extends Component {
                   <Item error={boolError(confirmpasswordError)}>
                      <Input placeholder={this.getText('form_label.confirmpassword')} secureTextEntry={true} onChangeText={(confirmpassword) => this.setState({confirmpassword, confirmpasswordError: ""})} value={this.state.confirmpassword}/>{confirmpasswordError}
                   </Item>
-                  <Button style={nativeStyles.signUpButton} light onPress={actions.signUp}>
+                  <Button style={nativeStyles.signUpButton} info onPress={actions.signUp}>
                      <Text style={nativeStyles.buttonText}>{this.getText('label_signup_button')}</Text>
                   </Button>
                </Form>
@@ -326,6 +326,7 @@ var nativeStyles = {
    },
    buttonText: {
       fontSize: 17,
-      fontWeight: '600'
+      fontWeight: '600',
+      color: 'white'
    }
 };

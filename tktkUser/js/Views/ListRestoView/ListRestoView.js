@@ -231,8 +231,8 @@ class ListRestoView extends Component {
                         <Input placeholder={this.getText('label_npa')} onSubmitEditing={actions.search} autoCorrect={false} onChangeText={(npa) => this.setState({npa, npaError: ""})} value={this.state.npa}/>{npaError}
                      </Item>
                   </Form>
-                  <Button light onPress={actions.search}>
-                     <Text>{this.getText('label_search_button')}</Text>
+                  <Button info onPress={actions.search}>
+                     <Text style={nativeStyles.buttonText}>{this.getText('label_search_button')}</Text>
                   </Button>
                </CardItem>
             </Card>
@@ -261,8 +261,8 @@ class ListRestoView extends Component {
       return (
          <View>
             {tab}
-            <Button style={nativeStyles.buttonBack} block light onPress={onBack}>
-               <Text>{this.getText('label_cancel_button')}</Text>
+            <Button style={nativeStyles.buttonBack} block info onPress={onBack}>
+               <Text style={nativeStyles.buttonText}>{this.getText('label_cancel_button')}</Text>
             </Button>
          </View>
       );
@@ -281,8 +281,8 @@ class ListRestoView extends Component {
                   <Text>{this.getText('not_found')}</Text>
                </CardItem>
             </Card>
-            <Button style={nativeStyles.buttonBack} block light onPress={onBack}>
-               <Text>{this.getText('label_cancel_button')}</Text>
+            <Button style={nativeStyles.buttonBack} block info onPress={onBack}>
+               <Text style={nativeStyles.buttonText}>{this.getText('label_cancel_button')}</Text>
             </Button>
          </View>
       );
@@ -345,6 +345,10 @@ var nativeStyles = {
    },
    buttonBack: {
       margin: 20
+   },
+   buttonText: {
+      color: 'white',
+      fontWeight: '700'
    }
 };
 
