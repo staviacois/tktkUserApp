@@ -188,7 +188,7 @@ class ListRestoView extends Component {
 
       let lines = null;
 
-      if (this.state.handleLinesSub && this.state.handleLinesSub.ready()) {
+      if (this.state.handleLinesSub) {
          if (this.props.lines.length) {
             let tab = [];
             const fromProp = {
@@ -210,10 +210,13 @@ class ListRestoView extends Component {
                </Card>
             );
          } else {
+            const cont = this.state.handleLinesSub.ready()
+               ? <Text style={nativeStyles.gpsFoundText}>{this.getText('text_gps_not_found')}</Text>
+               : null;
             lines = (
                <Card>
                   <CardItem>
-                     <Text style={nativeStyles.gpsFoundText}>{this.getText('text_gps_not_found')}</Text>
+                     {cont}
                   </CardItem>
                </Card>
             );

@@ -52,7 +52,12 @@ const text = {
         "text_header": "Restaurant : ",
         "footer_next": "Suivant",
         "footer_choose": "Choisissez vos plats",
-        "footer_disabled": "Service de commande fermé"
+        "footer_disabled": "Service de commande fermé",
+        "title_articles": "Articles",
+        "title_about": "A propos de ce restaurant",
+        "label_description": "Description :",
+        "label_website": "Site web :",
+        "label_tel": "Téléphone :"
     },
     "MapRestoView": {
         "text_header": "Carte des restaurants",
@@ -72,7 +77,8 @@ const text = {
         "error_empty": "Remplissez ce champ",
         "label_name": "Nom complet",
         "label_tel": "Téléphone",
-        "label_deliver": " Je souhaite être livré"
+        "label_deliver": " Je souhaite être livré",
+        "label_address": "Adresse"
     },
     "asyncApi": {
         "not_connected_title": "Erreur de connexion",

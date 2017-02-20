@@ -66,6 +66,11 @@ class EndOrderView extends Component {
                   from: this.props.params.from
                }
             });
+         },
+         endOrder: () => {
+            if (this.validateForm()) {
+               console.log("END ORDER");
+            }
          }
       };
    }
@@ -93,10 +98,13 @@ class EndOrderView extends Component {
    }
 
    validateForm() {
-      if (!this.state.email || !this.state.password) {
+      if (!this.state.name || !this.state.tel || (this.props.line.settings.delivery && this.state.deliverCheck && !this.state.address)) {
          this.setState({
-            emailError: this.verifyEmpty(this.state.email),
-            passwordError: this.verifyEmpty(this.state.password)
+            nameError: this.verifyEmpty(this.state.name),
+            telError: this.verifyEmpty(this.state.tel),
+            addressError: (this.state.deliverCheck && this.props.line.settings.delivery
+               ? this.verifyEmpty(this.state.address)
+               : "")
          });
          return false;
       }
@@ -191,15 +199,13 @@ class EndOrderView extends Component {
 
          const deliverForm = this.state.deliverCheck
             ? (
-               <CardItem>
-                  <Form>
-                     <Item stackedLabel error={boolError(addressError)}>
-                        <Label>{this.getText('label_address')}</Label>
-                        <Input autoCorrect={false} onChangeText={(address) => this.setState({address, addressError: ""})} value={this.state.address}/>
-                     </Item>
-                     {addressError}
-                  </Form>
-               </CardItem>
+               <Form style={nativeStyles.form}>
+                  <Item stackedLabel error={boolError(addressError)}>
+                     <Label>{this.getText('label_address')}</Label>
+                     <Input autoCorrect={false} onChangeText={(address) => this.setState({address, addressError: ""})} value={this.state.address}/>
+                  </Item>
+                  {addressError}
+               </Form>
             )
             : null;
          return (
@@ -234,7 +240,7 @@ class EndOrderView extends Component {
          : null;
 
       const onPress = () => {
-         console.log("ORDER NOW");
+         actions.endOrder();
       }
 
       return (

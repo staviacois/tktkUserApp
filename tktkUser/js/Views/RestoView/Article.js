@@ -109,7 +109,7 @@ export default class Article extends Component {
       }
 
       return (
-         <Card>
+         <Card style={nativeStyles.container}>
             <CardItem>
                <Body>
                   <Text style={nativeStyles.title}>{article.name}</Text>
@@ -135,9 +135,12 @@ export default class Article extends Component {
 }
 
 var nativeStyles = {
+   container: {
+      margin: 10
+   },
    title: {
       fontWeight: '600',
-      fontSize: 17
+      fontSize: 15
    },
    row: {
       flexDirection: 'row'
@@ -152,6 +155,6 @@ var nativeStyles = {
       fontWeight: '700'
    },
    badgeContainer: {
-     height: 26
+      height: 26
    }
 };

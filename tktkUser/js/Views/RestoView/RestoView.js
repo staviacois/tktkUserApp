@@ -3,10 +3,12 @@ import {
    StyleSheet,
    View,
    Text,
+   Platform,
    ScrollView,
    TextInput,
    TouchableHighlight,
-   Alert
+   Alert,
+   Linking
 } from 'react-native';
 import {
    Container,
@@ -59,6 +61,9 @@ class RestoView extends Component {
                   from: this.props.params.from
                }
             });
+         },
+         openWebsite: () => {
+            Linking.openURL(this.props.line.settings.website);
          }
       };
    }
@@ -97,6 +102,50 @@ class RestoView extends Component {
       });
 
       return tab;
+   }
+
+   renderAbout(actions) {
+      const tab = [];
+
+      if (this.props.line.settings.description) {
+         tab.push(
+            <ListItem style={nativeStyles.listAbout} key={'description'}>
+               <Text style={nativeStyles.titleAbout}>{this.getText('label_description')}</Text>
+               <Text>{this.props.line.settings.description}</Text>
+            </ListItem>
+         );
+      }
+
+      if (this.props.line.settings.website) {
+         tab.push(
+            <ListItem style={nativeStyles.listAbout} key={'website'} onPress={actions.openWebsite}>
+               <Text style={nativeStyles.titleAbout}>{this.getText('label_website')}</Text>
+               <Text style={nativeStyles.linkText}>{this.props.line.settings.website}</Text>
+            </ListItem>
+         );
+      }
+
+      if (this.props.line.settings.phonenbr) {
+         tab.push(
+            <ListItem style={nativeStyles.listAbout} key={'tel'}>
+               <Text style={nativeStyles.titleAbout}>{this.getText('label_tel')}</Text>
+               <Text>{this.props.line.settings.phonenbr}</Text>
+            </ListItem>
+         );
+      }
+
+      if (tab.length > 0) {
+         return (
+            <Card style={nativeStyles.aboutContainer}>
+               <CardItem>
+                  <Text style={nativeStyles.cardTitle}>{this.getText('title_about')}</Text>
+               </CardItem>
+               {tab}
+            </Card>
+         );
+      } else {
+         return null;
+      }
    }
 
    render() {
@@ -150,7 +199,15 @@ class RestoView extends Component {
                </Body>
                <Right/>
             </Header>
-            <Content>{this.renderArticles(actions)}</Content>
+            <Content>
+               {this.renderAbout(actions)}
+               <Card>
+                  <CardItem>
+                     <Text style={nativeStyles.cardTitle}>{this.getText('title_articles')}</Text>
+                  </CardItem>
+                  {this.renderArticles(actions)}
+               </Card>
+            </Content>
             <Footer>
                <Body>
                   <Button onPress={onPress} disabled={!footerEnabled} info full style={footerButtonStyle}>
@@ -170,6 +227,25 @@ const nativeStyles = {
    },
    footerButtonDisabled: {
       backgroundColor: '#b5b5b5'
+   },
+   cardTitle: {
+      fontSize: 17,
+      fontWeight: '700'
+   },
+   aboutContainer: {
+      paddingBottom: 10
+   },
+   linkText: {
+      color: 'blue',
+      textDecorationLine: 'underline'
+   },
+   listAbout: {
+      flexDirection: 'column',
+      alignItems: 'flex-start'
+   },
+   titleAbout: {
+      fontSize: 16,
+      fontWeight: '600'
    }
 }
 
