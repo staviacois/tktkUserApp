@@ -98,8 +98,12 @@ function subscribe(name, payload, onReady) {
 function multiSubscribe(subscriptions) {
    const tab = [];
    subscriptions.forEach((subscription) => {
-      const handler = Meteor.subscribe(subscription.name, subscription.payload);
-      tab.push(handler);
+      if (subscription.multiArgs) {
+         const tab = Object.values(subscription.payload);
+         tab.push(Meteor.subscribe(subscription.name, ...tab));
+      } else {
+         tab.push(Meteor.subscribe(subscription.name, subscription.payload));
+      }
    });
 
    const r = () => {
@@ -113,7 +117,7 @@ function multiSubscribe(subscriptions) {
    return {ready: r};
 }
 
-function defaultErrorAction(nav){
+function defaultErrorAction(nav) {
    Alert.alert(getText('not_connected_title'), getText('not_connected'));
    nav.replace({title: 'HomeView'});
 }

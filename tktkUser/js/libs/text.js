@@ -78,7 +78,8 @@ const text = {
         "label_name": "Nom complet",
         "label_tel": "Téléphone",
         "label_deliver": " Je souhaite être livré",
-        "label_address": "Adresse"
+        "label_address": "Adresse",
+        "generic_error_message": "Une erreur s'est produite",
     },
     "asyncApi": {
         "not_connected_title": "Erreur de connexion",
@@ -87,6 +88,11 @@ const text = {
     "menu_label": {
         "ListRestoView": "Liste des restaurants",
         "MapRestoView": "Carte des restaurants"
+    },
+    "OrderView": {
+        "text_header": "Restaurant : ",
+        "label_order": "Commande N°",
+        "label_total": "Total à payer : "
     }
 }
 

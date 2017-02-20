@@ -69,7 +69,55 @@ class EndOrderView extends Component {
          },
          endOrder: () => {
             if (this.validateForm()) {
-               console.log("END ORDER");
+               const tab = [];
+               let total = 0;
+               let time = 0;
+
+               Object.values(this.props.params.recap).forEach((item) => {
+                  total = total + item.price * item.count;
+                  time = time + item.count * item.time;
+                  tab.push({name: item.name, price: item.price, quantity: item.count});
+               });
+
+               const payload = {
+                  idline: this.props.line._id,
+                  urlname: this.props.line.urlname,
+                  name: this.state.name,
+                  phonenumber: this.state.tel,
+                  order: tab,
+                  timePrep: time,
+                  payement: {
+                     choice: 0,
+                     orderprice: total,
+                     type: 0
+                  }
+               }
+
+               const cbSuccess = (err, res) => {
+                  if (err) {
+                     Alert.alert('', this.getText("generic_error_message") + " (" + err.error + ")");
+                     this.setState({nameError: "", telError: "", addressError: ""});
+                  } else {
+                     if (!res.problem) {
+                        this.setState({nameError: "", telError: "", addressError: ""});
+                        this.props.navigator.push({
+                           title: 'OrderView',
+                           params: {
+                              ticket: res
+                           }
+                        });
+                     } else {
+                        Alert.alert('', res.message);
+                        this.setState({nameError: "", telError: "", addressError: ""});
+                     }
+                  }
+               };
+
+               const cbError = () => {
+                  this.setState({nameError: "", telError: "", addressError: ""});
+               }
+
+               asyncApi.callAsyncServer('takeATicketOrder', payload, cbSuccess, cbError);
             }
          }
       };

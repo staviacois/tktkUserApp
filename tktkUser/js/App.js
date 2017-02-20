@@ -136,7 +136,7 @@ export default class App extends Component {
 
       return (
          <View style={styles.superContainer}>
-            <SideMenu disableGestures={!this.state.login} animationFunction={animFunction} menu={menu} isOpen={this.state.menuIsOpen} onChange={(isOpen) => this.setState({menuIsOpen: isOpen})}>
+            <SideMenu disableGestures={true} animationFunction={animFunction} menu={menu} isOpen={this.state.menuIsOpen} onChange={(isOpen) => this.setState({menuIsOpen: isOpen})}>
                {navig}
             </SideMenu>
          </View>
