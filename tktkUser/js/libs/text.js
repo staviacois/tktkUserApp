@@ -54,7 +54,8 @@ const text = {
         "label_details": "Détails",
         "text_gps_not_found": "Aucun service détecté dans votre région",
         "text_gps_found": "service(s) détecté(s) dans votre région :",
-        "not_found": "Aucun restaurant trouvé"
+        "not_found": "Aucun restaurant trouvé",
+        "text_gps_disabled": "Activez la géolocalisation pour profiter de toutes les fonctionnalités de cette application"
     },
     "RestoView": {
         "text_header": "Restaurant : ",
@@ -73,7 +74,8 @@ const text = {
         "error_invalid_number": "Insérez un nombre",
         "label_meters": "Rayon [m]",
         "label_button_search": "Valider",
-        "waiting_gps": "En attente du GPS..."
+        "waiting_gps": "En attente du GPS...",
+        "text_gps_disabled": "Activez la géolocalisation pour profiter de toutes les fonctionnalités de cette application"
     },
     "EndOrderView": {
         "text_header": "Restaurant : ",

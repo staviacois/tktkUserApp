@@ -49,7 +49,8 @@ class ListRestoView extends Component {
       this.state = {
          npa: npa,
          npaError: "",
-         pos: null
+         pos: null,
+         posDenied: false
       }
    }
 
@@ -62,27 +63,25 @@ class ListRestoView extends Component {
 
       // Get current location and search for nearby lines
       navigator.geolocation.getCurrentPosition((pos) => {
-         this.setState({pos: pos});
+         this.setState({pos: pos, posDenied: false});
          if (!this.state.handleLinesNPASub) {
             actions.searchWithLocation();
          }
-      }, (err) => {}, {
-         enableHighAccuracy: true,
-         timeout: 20000,
-         maximumAge: 1000
+      }, (err) => {
+         console.log(err);
+         if (err.code === err.PERMISSION_DENIED || err.code === err.POSITION_UNAVAILABLE) {
+            this.setState({posDenied: true});
+            console.log("Access denied");
+         }
       });
 
       // Updates nearby lines when location updates
       this.watchID = navigator.geolocation.watchPosition((pos) => {
-         this.setState({pos: pos});
+         this.setState({pos: pos, posDenied: false});
          if (this.state.handleLinesSub && !this.state.handleLinesNPASub) {
             actions.searchWithLocation();
          }
-      }, (err) => {}, {
-         enableHighAccuracy: true,
-         timeout: 20000,
-         maximumAge: 1000
-      });
+      }, (err) => {});
    }
 
    componentWillUnmount() {
@@ -200,39 +199,49 @@ class ListRestoView extends Component {
 
       let lines = null;
 
-      if (this.state.handleLinesSub) {
-         if (this.props.lines.length) {
-            let tab = [];
-            const fromProp = {
-               view: "ListRestoView"
-            };
-            const pos = this.state.pos
-               ? this.state.pos.coords
-               : null;
-            this.props.lines.forEach((line) => {
-               tab.push(<Resto key={line._id} line={line} navigator={this.props.navigator} from={fromProp} pos={pos}/>);
-            });
+      if (!this.state.posDenied) {
+         if (this.state.handleLinesSub) {
+            if (this.props.lines.length) {
+               let tab = [];
+               const fromProp = {
+                  view: "ListRestoView"
+               };
+               const pos = this.state.pos
+                  ? this.state.pos.coords
+                  : null;
+               this.props.lines.forEach((line) => {
+                  tab.push(<Resto key={line._id} line={line} navigator={this.props.navigator} from={fromProp} pos={pos}/>);
+               });
 
-            lines = (
-               <Card>
-                  <CardItem>
-                     <Text style={nativeStyles.gpsFoundText}>{this.props.lines.length + " " + this.getText('text_gps_found')}</Text>
-                  </CardItem>
-                  {tab}
-               </Card>
-            );
-         } else {
-            const cont = this.state.handleLinesSub.ready()
-               ? <Text style={nativeStyles.gpsFoundText}>{this.getText('text_gps_not_found')}</Text>
-               : null;
-            lines = (
-               <Card>
-                  <CardItem>
-                     {cont}
-                  </CardItem>
-               </Card>
-            );
+               lines = (
+                  <Card>
+                     <CardItem>
+                        <Text style={nativeStyles.gpsFoundText}>{this.props.lines.length + " " + this.getText('text_gps_found')}</Text>
+                     </CardItem>
+                     {tab}
+                  </Card>
+               );
+            } else {
+               const cont = this.state.handleLinesSub.ready()
+                  ? <Text style={nativeStyles.gpsFoundText}>{this.getText('text_gps_not_found')}</Text>
+                  : null;
+               lines = (
+                  <Card>
+                     <CardItem>
+                        {cont}
+                     </CardItem>
+                  </Card>
+               );
+            }
          }
+      } else {
+         lines = (
+            <Card>
+               <CardItem>
+                  <Text style={nativeStyles.activateGpsText}>{this.getText('text_gps_disabled')}</Text>
+               </CardItem>
+            </Card>
+         );
       }
 
       const boolError = function(error) {
@@ -387,6 +396,9 @@ var nativeStyles = {
    buttonText: {
       color: 'white',
       fontWeight: '700'
+   },
+   activateGpsText: {
+      fontWeight: '600'
    }
 };
 

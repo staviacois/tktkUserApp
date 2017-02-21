@@ -51,8 +51,9 @@ class MapRestoView extends Component {
          actualMeter: 1000,
          meterError: false,
          pos: null,
+         posDenied: false,
          lineToShow: props.params.selected || null
-      }
+      };
    }
 
    componentWillMount() {
@@ -60,16 +61,22 @@ class MapRestoView extends Component {
 
       // Get current position, and search for nearby lines
       navigator.geolocation.getCurrentPosition((pos) => {
-         this.setState({pos: pos});
+         this.setState({pos: pos, posDenied: false});
          actions.searchWithLocation();
-      }, (err) => {});
+      }, (err) => {
+         console.log(err);
+         if (err.code === err.PERMISSION_DENIED || err.code === err.POSITION_UNAVAILABLE) {
+            this.setState({posDenied: true});
+            console.log("Access denied");
+         }
+      });
 
       // Automatically search for nearby lines when position updates
       this.watchID = navigator.geolocation.watchPosition((pos) => {
          console.log("-----");
          console.log("--------------- GPS frafraichissement");
          console.log("----------------");
-         this.setState({pos: pos});
+         this.setState({pos: pos, posDenied: false});
          actions.searchWithLocation();
       }, (err) => {});
    }
@@ -249,6 +256,16 @@ class MapRestoView extends Component {
                {resto}
             </View>
          );
+      } else if (this.state.posDenied) {
+         content = (
+            <View style={nativeStyles.container}>
+               <Card>
+                  <CardItem>
+                     <Text style={nativeStyles.activateGpsText}>{this.getText('text_gps_disabled')}</Text>
+                  </CardItem>
+               </Card>
+            </View>
+         );
       } else {
          content = (
             <View style={nativeStyles.container}>
@@ -316,6 +333,9 @@ var nativeStyles = {
    buttonText: {
       color: 'white',
       fontWeight: '700'
+   },
+   activateGpsText: {
+      fontWeight: '600'
    }
 };
 
