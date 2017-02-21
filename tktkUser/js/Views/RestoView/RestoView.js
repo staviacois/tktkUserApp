@@ -38,6 +38,8 @@ import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
 
 class RestoView extends Component {
+   // This view shows infos and articles from a line
+   // This view is used to chose articles from a list, and access to EndOrderView to finalize the order
 
    constructor(props) {
       super(props);

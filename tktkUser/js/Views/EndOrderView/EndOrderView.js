@@ -37,6 +37,7 @@ import * as asyncApi from '../../libs/asyncApi.js';
 import * as storage from '../../libs/storage.js';
 
 class EndOrderView extends Component {
+   // This view shows a summary of an order, and asks for user informations to finalize an order
 
    constructor(props) {
       super(props);
@@ -106,6 +107,7 @@ class EndOrderView extends Component {
                   } else {
                      if (!res.problem) {
                         this.setState({nameError: "", telError: "", addressError: ""});
+                        // Stores the ticket
                         storage.set('@Ticket', JSON.stringify(res), () => {});
                         this.props.navigator.push({
                            title: 'OrderView',

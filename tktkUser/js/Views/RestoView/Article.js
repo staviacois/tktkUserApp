@@ -34,6 +34,7 @@ import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
 
 export default class Article extends Component {
+   // This component represents an item of a line in a Card component, and can be used to select items for an order
 
    constructor(props) {
       super(props);

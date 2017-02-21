@@ -34,6 +34,7 @@ import * as storage from '../../libs/storage.js';
 import Logo from '../../Components/Logo.js';
 
 export default class SignInView extends Component {
+   // This view is used to login, to access to the app
 
    constructor(props) {
       super(props);
@@ -67,13 +68,17 @@ export default class SignInView extends Component {
                   } else {
                      if (!res.problem) {
                         this.setState({emailError: "", passwordError: ""});
+
+                        // Let the App component handle the storage of the login
                         this.props.onSignIn({
                            email: this.state.email,
                            password: this.state.password
                         }, res);
 
+                        // Get the current ticket from storage
                         storage.get('@Ticket', (err, val) => {
                            if (!err && val) {
+                              // If there is a ticket, show OrderView
                               this.props.navigator.push({
                                  title: 'OrderView',
                                  params: {
@@ -81,6 +86,7 @@ export default class SignInView extends Component {
                                  }
                               });
                            } else {
+                              // Else, show ListRestoView
                               this.props.navigator.push({title: 'ListRestoView'});
                            }
                         });

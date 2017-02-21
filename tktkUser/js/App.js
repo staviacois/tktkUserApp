@@ -31,9 +31,12 @@ import EndOrderView from './Views/EndOrderView';
 import OrderView from './Views/OrderView';
 
 export default class App extends Component {
+   // App skeleton
+
    constructor(props) {
       super(props);
 
+      // Define default state
       this.state = {
          login: null,
          lastLogin: {
@@ -43,43 +46,57 @@ export default class App extends Component {
          menuIsOpen: false
       };
 
+      // Bind functions to this
       this.handleSignIn = this.handleSignIn.bind(this);
       this.handleSignOut = this.handleSignOut.bind(this);
       this.handleOpenMenu = this.handleOpenMenu.bind(this);
    }
 
    componentWillMount() {
+
+      // Initialize connection to meteor
       asyncApi.init();
+
+      // Set android back button action
       BackAndroid.addEventListener('hardwareBackPress', () => {
          return true;
       });
+
+      // Get last login from storage
       storage.get('@Login', (err, val) => {
          if (!err && val) {
             this.setState({lastLogin: JSON.parse(val)});
          }
       });
+
+      // Hide StatusBar
       StatusBar.setHidden(true);
    }
 
    componentDidMount() {
+      // Hide StatusBar
       StatusBar.setHidden(true);
    }
 
    handleSignIn(userInfos, login) {
+      // Store last login in storage and in state
       storage.set('@Login', JSON.stringify(userInfos), () => {});
       this.setState({lastLogin: userInfos, login: login});
    }
 
    handleSignOut() {
+      // Remove login from state and redirect to HomeView
       this.setState({login: null});
       this.navigator.push({title: 'HomeView', anim: 2});
    }
 
    handleOpenMenu() {
+      // Open the menu
       this.setState({menuIsOpen: true});
    }
 
    handleMenuPress(label, shouldPush) {
+      // Close the menu and redirect to view if needed
       if (shouldPush) {
          this.navigator.push({title: label});
       }
@@ -88,6 +105,8 @@ export default class App extends Component {
 
    render() {
 
+      // Define navigator using HomeView as initial route
+      // This navigator can handle special transition animations, and automatically unmounts unused views
       const navig = (<Navigator initialRoute={{
          title: 'HomeView'
       }} renderScene={this.renderScene.bind(this)} configureScene={(route) => {
@@ -123,6 +142,7 @@ export default class App extends Component {
          }
       }}/>);
 
+      // Define menu animation function
       const animFunction = (prop, value) => {
          return Animated.spring(prop, {
             toValue: value,
@@ -130,10 +150,12 @@ export default class App extends Component {
          });
       }
 
+      // Define menu only if the user did sign in
       const menu = this.state.login
          ? this.renderMenu()
          : null;
 
+      // Return the root component of the app
       return (
          <View style={styles.superContainer}>
             <SideMenu disableGestures={true} animationFunction={animFunction} menu={menu} isOpen={this.state.menuIsOpen} onChange={(isOpen) => this.setState({menuIsOpen: isOpen})}>
@@ -144,13 +166,20 @@ export default class App extends Component {
    }
 
    renderMenu() {
+
       const self = this;
       const tab = [];
+
+      // For each menu element
       ["ListRestoView", "MapRestoView"].forEach((elem) => {
+
+         // shouldPush : tells if this menu element represents another view than current showed view
          let shouldPush = true;
          const elemStyle = [styles.menuText];
          const currentRoutes = self.navigator.getCurrentRoutes();
+
          if (currentRoutes[currentRoutes.length - 1].title === elem) {
+            // If this menu element represents the current showed view, change his style and set shouldPush to false
             elemStyle.push(styles.menuTextActive);
             shouldPush = false;
          }
@@ -160,6 +189,7 @@ export default class App extends Component {
          );
       });
 
+      // Return a scrollable view containing all menu elements
       return (
          <ScrollView scrollsToTop={false}>
             {tab}
@@ -175,12 +205,13 @@ export default class App extends Component {
       if (!route.params)
          route.params = {};
 
+      // commonFuncs: functions that every view should be able to access to
       const commonFuncs = {
          onOpenMenu: this.handleOpenMenu
       };
 
+      // Chose right view to show
       let content = null;
-
       switch (route.title) {
          case 'HomeView':
             content = (<HomeView navigator={navigator} params={route.params} commonFuncs={commonFuncs}/>);
@@ -214,6 +245,7 @@ export default class App extends Component {
             break;
       }
 
+      // Wrap view in the style provider to set the right theme
       return (
          <StyleProvider style={getTheme(theme)}>
             {content}

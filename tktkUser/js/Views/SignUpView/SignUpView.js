@@ -31,6 +31,7 @@ import * as asyncApi from '../../libs/asyncApi.js';
 import Logo from '../../Components/Logo.js';
 
 export default class SignUpView extends Component {
+   // This view is used to create a new account
 
    constructor(props) {
       super(props);

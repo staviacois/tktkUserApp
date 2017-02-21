@@ -18,6 +18,8 @@ import * as text from '../../libs/text.js';
 import Logo from '../../Components/Logo.js';
 
 export default class HomeView extends Component {
+   // This view is the default view at application startup
+   // It gives access to SignInView and SignUpView
 
    getAction() {
       return {

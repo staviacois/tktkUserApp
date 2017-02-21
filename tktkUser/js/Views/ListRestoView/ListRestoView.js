@@ -34,6 +34,8 @@ import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
 
 class ListRestoView extends Component {
+   // This view shows a list of lines
+   // It gives access to a search by NPA, and a search by location (nearby lines)
 
    constructor(props) {
       super(props);
@@ -56,6 +58,7 @@ class ListRestoView extends Component {
          actions.search();
       }
 
+      // Get current location and search for nearby lines
       navigator.geolocation.getCurrentPosition((pos) => {
          this.setState({pos: pos});
          if (!this.state.handleLinesNPASub) {
@@ -67,6 +70,7 @@ class ListRestoView extends Component {
          maximumAge: 1000
       });
 
+      // Updates nearby lines when location updates
       this.watchID = navigator.geolocation.watchPosition((pos) => {
          this.setState({pos: pos});
          if (this.state.handleLinesSub && !this.state.handleLinesNPASub) {
@@ -95,6 +99,7 @@ class ListRestoView extends Component {
             this.props.navigator.push({title: title});
          },
          search: () => {
+            // Search lines by NPA
             if (this.validateForm()) {
 
                const payload = {
@@ -122,6 +127,7 @@ class ListRestoView extends Component {
             }
          },
          searchWithLocation: () => {
+            // Search lines by location
             if (this.state.pos) {
                const payload = {
                   lng: this.state.pos.coords.longitude,
@@ -184,6 +190,10 @@ class ListRestoView extends Component {
    }
 
    renderSearch(actions) {
+      // Render :
+      //  - Form to search by NPA
+      //  - Lines found by location
+
       const npaError = this.renderError(this.state.npaError);
 
       let lines = null;
@@ -252,6 +262,8 @@ class ListRestoView extends Component {
    }
 
    renderSearchedLines(actions) {
+      // Render lines found by NPA
+
       const tab = [];
       const fromProp = {
          view: "ListRestoView",
@@ -282,6 +294,8 @@ class ListRestoView extends Component {
    }
 
    renderNotFound(actions) {
+      // Render a message if no lines were found with given NPA
+
       const onBack = () => {
          actions.removeSub();
          actions.searchWithLocation();

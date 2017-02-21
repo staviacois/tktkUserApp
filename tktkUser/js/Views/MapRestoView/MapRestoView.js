@@ -39,6 +39,7 @@ import * as asyncApi from '../../libs/asyncApi.js';
 import Resto from '../ListRestoView/Resto.js';
 
 class MapRestoView extends Component {
+   // This view shows a map showing user's position, and position of nearby lines
 
    constructor(props) {
       super(props);
@@ -55,11 +56,13 @@ class MapRestoView extends Component {
    componentWillMount() {
       const actions = this.getAction();
 
+      // Get current position, and search for nearby lines
       navigator.geolocation.getCurrentPosition((pos) => {
          this.setState({pos: pos});
          actions.searchWithLocation();
       }, (err) => {});
 
+      // Automatically search for nearby lines when position updates
       this.watchID = navigator.geolocation.watchPosition((pos) => {
          console.log("-----");
          console.log("--------------- GPS frafraichissement");
@@ -76,6 +79,7 @@ class MapRestoView extends Component {
       }
    }
 
+   // Search for nearby lines when state's meter property changes
    componentDidUpdate(oldProps, oldState) {
       if (oldState.actualMeter !== this.state.actualMeter) {
          this.getAction().searchWithLocation();

@@ -40,12 +40,14 @@ import * as asyncApi from '../../libs/asyncApi.js';
 import * as storage from '../../libs/storage.js';
 
 class OrderView extends Component {
+   // This view shows the state and informations about a ticket
 
    constructor(props) {
       super(props);
    }
 
    componentDidMount() {
+      // This inerval is used to keep the time up to date in the state
       const handler = setInterval(() => {
          if (this.props.ticket && this.props.ticket.logs.accepted) {
             const newTime = this.getTimePrep();
@@ -58,6 +60,7 @@ class OrderView extends Component {
    }
 
    componentWillUpdate(nextProps, nextState) {
+      // Instantly set the time to wait, before the interval updates it
       if (nextProps.ticket && nextProps.ticket.logs.accepted) {
          nextState.time = this.getTimePrep(nextProps.ticket);
       }
@@ -131,6 +134,7 @@ class OrderView extends Component {
    }
 
    getTimePrep(ticket = this.props.ticket) {
+      // Calc difference in minutes between ticket.logs.accepted and now
       const diff = Math.round((new Date() - ticket.logs.accepted) / 1000 / 60);
       let minutes = ticket.timePrep - diff;
       if (minutes < 1) {
@@ -216,7 +220,7 @@ class OrderView extends Component {
                r = [(
                      <Card key={1}>
                         <CardItem>
-                           <Icon name='alarm'/>
+                           <Icon name='restaurant'/>
                            <Text style={nativeStyles.cardHeaderText}>{this.getText('ready')}</Text>
                         </CardItem>
                         <CardItem>
@@ -230,7 +234,7 @@ class OrderView extends Component {
                r = [(
                      <Card key={1}>
                         <CardItem>
-                           <Icon name='alarm'/>
+                           <Icon name='restaurant'/>
                            <Text style={nativeStyles.cardHeaderText}>{this.getText('delivery')}</Text>
                         </CardItem>
                         <CardItem>

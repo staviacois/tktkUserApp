@@ -34,6 +34,7 @@ import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
 
 export default class Resto extends Component {
+   // This component represents a line in a Card component, and gives access to RestoView
 
    constructor(props) {
       super(props);
