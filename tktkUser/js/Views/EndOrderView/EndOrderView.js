@@ -1,26 +1,16 @@
 import React, {Component} from 'react';
-import {
-   StyleSheet,
-   View,
-   Text,
-   ScrollView,
-   TextInput,
-   TouchableHighlight,
-   Alert
-} from 'react-native';
+import {Text, Alert} from 'react-native';
 import {
    Container,
    Header,
    Content,
    Title,
    Icon,
-   List,
    ListItem,
    Left,
    Body,
    Right,
    Button,
-   StyleProvider,
    Input,
    Label,
    Item,
@@ -28,7 +18,6 @@ import {
    Card,
    CardItem,
    Footer,
-   FooterTab,
    CheckBox
 } from 'native-base';
 import {createContainer} from 'react-native-meteor';

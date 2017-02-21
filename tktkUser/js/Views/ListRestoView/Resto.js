@@ -1,37 +1,7 @@
 import React, {Component} from 'react';
-import {
-   StyleSheet,
-   View,
-   Text,
-   ScrollView,
-   TextInput,
-   TouchableHighlight,
-   Alert,
-   PixelRatio
-} from 'react-native';
-import {
-   Container,
-   Header,
-   Content,
-   Title,
-   Icon,
-   List,
-   ListItem,
-   Left,
-   Body,
-   Right,
-   Button,
-   StyleProvider,
-   Input,
-   Label,
-   Item,
-   Form,
-   Card,
-   CardItem
-} from 'native-base';
-import {createContainer} from 'react-native-meteor';
+import {Text} from 'react-native';
+import {Icon, ListItem, Body, Right, Card} from 'native-base';
 import * as text from '../../libs/text.js';
-import * as asyncApi from '../../libs/asyncApi.js';
 
 export default class Resto extends Component {
    // This component represents a line in a Card component, and gives access to RestoView

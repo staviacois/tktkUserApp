@@ -1,26 +1,14 @@
 import React, {Component} from 'react';
 import {
-   StyleSheet,
-   View,
-   Text,
-   ScrollView,
-   TextInput,
-   TouchableHighlight,
-   Alert
-} from 'react-native';
-import {
    Container,
    Header,
    Content,
    Title,
    Icon,
-   List,
-   ListItem,
    Left,
    Body,
    Right,
    Button,
-   StyleProvider,
    Input,
    Label,
    Item,
@@ -29,7 +17,6 @@ import {
    FooterTab
 } from 'native-base';
 import * as text from '../../libs/text.js';
-import * as asyncApi from '../../libs/asyncApi.js';
 
 export default class AccountView extends Component {
    // This view is used to show and edit user's informations

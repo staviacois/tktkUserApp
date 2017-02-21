@@ -1,20 +1,8 @@
 import React, {Component} from 'react'
-import {
-   Navigator,
-   View,
-   Text,
-   BackAndroid,
-   StatusBar,
-   TouchableHighlight,
-   StyleSheet,
-   ScrollView,
-   Platform,
-   Animated
-} from 'react-native';
-import {Container, Button, Icon, StyleProvider} from 'native-base';
+import {Navigator, BackAndroid, StatusBar} from 'react-native';
+import {StyleProvider} from 'native-base';
 import * as asyncApi from './libs/asyncApi.js';
 import * as storage from './libs/storage.js';
-import * as text from './libs/text.js';
 import getTheme from '../native-base-theme/components';
 import theme from '../native-base-theme/variables/platform.js';
 
@@ -139,8 +127,7 @@ export default class App extends Component {
          route.params = {};
 
       // commonFuncs: functions that every view should be able to access to
-      const commonFuncs = {
-      };
+      const commonFuncs = {};
 
       // Chose right view to show
       let content = null;
@@ -185,5 +172,3 @@ export default class App extends Component {
       );
    }
 }
-
-var styles = StyleSheet.create({});

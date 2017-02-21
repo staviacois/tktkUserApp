@@ -1,26 +1,15 @@
 import React, {Component} from 'react';
-import {
-   StyleSheet,
-   View,
-   Text,
-   ScrollView,
-   TextInput,
-   TouchableHighlight,
-   Alert
-} from 'react-native';
+import {View, Text, Alert} from 'react-native';
 import {
    Container,
    Header,
    Content,
    Title,
    Icon,
-   List,
-   ListItem,
    Left,
    Body,
    Right,
    Button,
-   StyleProvider,
    Input,
    Label,
    Item,
@@ -28,8 +17,6 @@ import {
 } from 'native-base';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
-import * as storage from '../../libs/storage.js';
-
 import Logo from '../../Components/Logo.js';
 
 export default class ForgotPswView extends Component {

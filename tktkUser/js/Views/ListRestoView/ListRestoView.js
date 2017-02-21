@@ -1,28 +1,16 @@
 import React, {Component} from 'react';
-import {
-   StyleSheet,
-   View,
-   Text,
-   ScrollView,
-   TextInput,
-   TouchableHighlight,
-   Alert
-} from 'react-native';
+import {View, Text} from 'react-native';
 import {
    Container,
    Header,
    Content,
    Title,
    Icon,
-   List,
-   ListItem,
    Left,
    Body,
    Right,
    Button,
-   StyleProvider,
    Input,
-   Label,
    Item,
    Form,
    Card,

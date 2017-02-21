@@ -1,36 +1,19 @@
 import React, {Component} from 'react';
-import {
-   StyleSheet,
-   View,
-   Text,
-   Platform,
-   ScrollView,
-   TextInput,
-   TouchableHighlight,
-   Alert,
-   Linking
-} from 'react-native';
+import {Text, Linking} from 'react-native';
 import {
    Container,
    Header,
    Content,
    Title,
    Icon,
-   List,
    ListItem,
    Left,
    Body,
    Right,
    Button,
-   StyleProvider,
-   Input,
-   Label,
-   Item,
-   Form,
    Card,
    CardItem,
-   Footer,
-   FooterTab
+   Footer
 } from 'native-base';
 import {createContainer} from 'react-native-meteor';
 import Article from './Article.js';

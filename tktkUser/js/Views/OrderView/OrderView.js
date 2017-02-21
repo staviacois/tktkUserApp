@@ -1,38 +1,19 @@
 import React, {Component} from 'react';
-import {
-   StyleSheet,
-   View,
-   Text,
-   ScrollView,
-   TextInput,
-   TouchableHighlight,
-   Alert,
-   Dimensions,
-   Linking,
-   Platform
-} from 'react-native';
+import {Text, Alert, Linking} from 'react-native';
 import {
    Container,
    Header,
    Content,
    Title,
    Icon,
-   List,
    ListItem,
    Left,
    Body,
    Right,
    Button,
-   StyleProvider,
-   Input,
-   Label,
-   Item,
-   Form,
    Card,
    CardItem,
-   Footer,
-   FooterTab,
-   CheckBox
+   Footer
 } from 'native-base';
 import {createContainer} from 'react-native-meteor';
 import * as text from '../../libs/text.js';
@@ -328,11 +309,8 @@ class OrderView extends Component {
                   Alert.alert('', this.getText("generic_error_message") + " (" + err.error + ")");
                } else {
                   if (!res.problem) {
-                     storage.remove('@Ticket', (err) => {
-                        if (!err) {
-                           this.props.navigator.push({title: 'ListRestoView', anim: 1});
-                        }
-                     });
+                     storage.remove('@Ticket', (err) => {});
+                     this.props.navigator.push({title: 'ListRestoView', anim: 1});
                   } else {
                      Alert.alert('', res.message);
                   }

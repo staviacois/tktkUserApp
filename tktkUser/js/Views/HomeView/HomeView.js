@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {View, Text} from 'react-native';
 import {
    Container,
    Header,
@@ -10,9 +10,7 @@ import {
    ListItem,
    Left,
    Body,
-   Right,
-   Button,
-   StyleProvider
+   Right
 } from 'native-base';
 import * as text from '../../libs/text.js';
 import Logo from '../../Components/Logo.js';
