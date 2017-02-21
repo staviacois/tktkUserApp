@@ -95,7 +95,8 @@ const text = {
     },
     "menu_label": {
         "ListRestoView": "Liste des restaurants",
-        "MapRestoView": "Carte des restaurants"
+        "MapRestoView": "Carte des restaurants",
+        "AccountView": "Mon compte"
     },
     "OrderView": {
         "text_header": "Restaurant : ",
@@ -128,6 +129,12 @@ const text = {
         "end_text": "Merci d'avoir utilisé tktk !",
         "canceled": "Désolé :/",
         "canceled_text": "Votre commande a été refusée. Si vous l'aviez prépayée, votre payement a été annulé."
+    },
+    "AccountView": {
+        "label_name": "Nom complet",
+        "label_tel": "Téléphone",
+        "label_address": "Adresse",
+        "text_header": "Mon compte"
     }
 }
 

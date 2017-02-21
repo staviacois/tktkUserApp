@@ -171,7 +171,7 @@ export default class App extends Component {
       const tab = [];
 
       // For each menu element
-      ["ListRestoView", "MapRestoView"].forEach((elem) => {
+      ["ListRestoView", "MapRestoView", "AccountView"].forEach((elem) => {
 
          // shouldPush : tells if this menu element represents another view than current showed view
          let shouldPush = true;

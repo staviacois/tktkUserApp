@@ -34,7 +34,7 @@ import * as storage from '../../libs/storage.js';
 import Logo from '../../Components/Logo.js';
 
 export default class ForgotPswView extends Component {
-   // This view is used recover password if forgotten
+   // This view is used to recover password if forgotten
 
    constructor(props) {
       super(props);
@@ -50,7 +50,7 @@ export default class ForgotPswView extends Component {
          showView: (title, anim) => {
             this.props.navigator.push({title: title, anim: anim});
          },
-         signIn: () => {
+         next: () => {
             if (this.validateForm()) {
 
                const payload = {
