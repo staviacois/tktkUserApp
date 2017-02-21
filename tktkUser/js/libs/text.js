@@ -35,6 +35,14 @@ const text = {
         "text_header": "Se connecter",
         "label_forgotten_password": "J'ai oublié mon mot de passe"
     },
+    "ForgotPswView": {
+        "text_header": "J'ai oublié mon mot de passe",
+        "label_email": "Email",
+        "label_next_button": "Réinitialiser mon mot de passe",
+        "error_empty": "Remplissez ce champ",
+        "generic_error_message": "Une erreur s'est produite",
+        "text_success": "Un email vous a été envoyé afin de réinitialiser votre mot de passe"
+    },
     "ListRestoView": {
         "text_header": "Liste des restaurants",
         "text_npa": "Indiquez le code postal de l'endroit où vous vous situez",
