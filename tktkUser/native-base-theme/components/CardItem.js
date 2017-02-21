@@ -195,7 +195,8 @@ export default (variables = variable) => {
 
       'NativeBase.Icon': {
         width: variables.iconFontSize + 5,
-       fontSize: variables.iconFontSize - 2,
+        fontSize: variables.iconFontSize - 2,
+        color: variables.listBorderColor
       },
       'NativeBase.IconNB': {
         width: variables.iconFontSize + 5,

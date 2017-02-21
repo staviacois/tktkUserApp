@@ -271,33 +271,51 @@ export default class SignUpView extends Component {
                   <Logo/>
                </View>
                <Form>
-                  <Item error={boolError(lastnameError)}>
-                     <Input placeholder={this.getText('form_label.lastname')} autoCorrect={false} onChangeText={(lastname) => this.setState({lastname, lastnameError: ""})} value={this.state.lastname}/>{lastnameError}
+                  <Item stackedLabel error={boolError(lastnameError)}>
+                     <Label>{this.getText('form_label.lastname')}</Label>
+                     <Input autoCorrect={false} onChangeText={(lastname) => this.setState({lastname, lastnameError: ""})} value={this.state.lastname}/>
                   </Item>
-                  <Item error={boolError(firstnameError)}>
-                     <Input placeholder={this.getText('form_label.firstname')} autoCorrect={false} onChangeText={(firstname) => this.setState({firstname, firstnameError: ""})} value={this.state.firstname}/>{firstnameError}
+                  {lastnameError}
+                  <Item style={nativeStyles.secondInput} stackedLabel error={boolError(firstnameError)}>
+                     <Label>{this.getText('form_label.firstname')}</Label>
+                     <Input autoCorrect={false} onChangeText={(firstname) => this.setState({firstname, firstnameError: ""})} value={this.state.firstname}/>
                   </Item>
-                  <Item error={boolError(streetError)}>
-                     <Input placeholder={this.getText('form_label.street')} autoCorrect={false} onChangeText={(street) => this.setState({street, streetError: ""})} value={this.state.street}/>{streetError}
+                  {firstnameError}
+                  <Item style={nativeStyles.secondInput} stackedLabel error={boolError(streetError)}>
+                     <Label>{this.getText('form_label.street')}</Label>
+                     <Input autoCorrect={false} onChangeText={(street) => this.setState({street, streetError: ""})} value={this.state.street}/>
                   </Item>
-                  <Item error={boolError(npaError)}>
-                     <Input placeholder={this.getText('form_label.npa')} autoCorrect={false} onChangeText={(npa) => this.setState({npa, npaError: ""})} value={this.state.npa}/>{npaError}
+                  {streetError}
+                  <Item style={nativeStyles.secondInput} stackedLabel error={boolError(npaError)}>
+                     <Label>{this.getText('form_label.npa')}</Label>
+                     <Input autoCorrect={false} onChangeText={(npa) => this.setState({npa, npaError: ""})} value={this.state.npa}/>
                   </Item>
-                  <Item error={boolError(cityError)}>
-                     <Input placeholder={this.getText('form_label.city')} autoCorrect={false} onChangeText={(city) => this.setState({city, cityError: ""})} value={this.state.city}/>{cityError}
+                  {npaError}
+                  <Item style={nativeStyles.secondInput} stackedLabel error={boolError(cityError)}>
+                     <Label>{this.getText('form_label.city')}</Label>
+                     <Input autoCorrect={false} onChangeText={(city) => this.setState({city, cityError: ""})} value={this.state.city}/>
                   </Item>
-                  <Item error={boolError(telError)}>
-                     <Input placeholder={this.getText('form_label.tel')} autoCorrect={false} onChangeText={(tel) => this.setState({tel, telError: ""})} value={this.state.tel}/>{telError}
+                  {cityError}
+                  <Item style={nativeStyles.secondInput} stackedLabel error={boolError(telError)}>
+                     <Label>{this.getText('form_label.tel')}</Label>
+                     <Input autoCorrect={false} onChangeText={(tel) => this.setState({tel, telError: ""})} value={this.state.tel}/>
                   </Item>
-                  <Item error={boolError(emailError)}>
-                     <Input placeholder={this.getText('form_label.email')} autoCorrect={false} onChangeText={(email) => this.setState({email, emailError: ""})} value={this.state.email}/>{emailError}
+                  {telError}
+                  <Item style={nativeStyles.secondInput} stackedLabel error={boolError(emailError)}>
+                     <Label>{this.getText('form_label.email')}</Label>
+                     <Input autoCorrect={false} onChangeText={(email) => this.setState({email, emailError: ""})} value={this.state.email}/>
                   </Item>
-                  <Item error={boolError(passwordError)}>
-                     <Input placeholder={this.getText('form_label.password')} onChangeText={(password) => this.setState({password, passwordError: ""})} value={this.state.password} secureTextEntry={true}/>{passwordError}
+                  {emailError}
+                  <Item style={nativeStyles.secondInput} stackedLabel error={boolError(passwordError)}>
+                     <Label>{this.getText('form_label.password')}</Label>
+                     <Input onChangeText={(password) => this.setState({password, passwordError: ""})} value={this.state.password} secureTextEntry={true}/>
                   </Item>
-                  <Item error={boolError(confirmpasswordError)}>
-                     <Input placeholder={this.getText('form_label.confirmpassword')} secureTextEntry={true} onChangeText={(confirmpassword) => this.setState({confirmpassword, confirmpasswordError: ""})} value={this.state.confirmpassword}/>{confirmpasswordError}
+                  {passwordError}
+                  <Item style={nativeStyles.secondInput} stackedLabel error={boolError(confirmpasswordError)}>
+                     <Label>{this.getText('form_label.confirmpassword')}</Label>
+                     <Input secureTextEntry={true} onChangeText={(confirmpassword) => this.setState({confirmpassword, confirmpasswordError: ""})} value={this.state.confirmpassword}/>
                   </Item>
+                  {confirmpasswordError}
                   <Button style={nativeStyles.signUpButton} info onPress={actions.signUp}>
                      <Text style={nativeStyles.buttonText}>{this.getText('label_signup_button')}</Text>
                   </Button>
@@ -315,9 +333,12 @@ var nativeStyles = {
       marginBottom: 80
    },
    errorLabel: {
-      paddingRight: 10,
+      paddingLeft: 25,
       color: '#a94442',
       fontWeight: '600'
+   },
+   secondInput: {
+      marginTop: 20
    },
    signUpButton: {
       marginTop: 20,

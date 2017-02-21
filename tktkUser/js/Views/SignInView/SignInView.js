@@ -29,6 +29,7 @@ import {
 import SideMenu from 'react-native-side-menu';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
+import * as storage from '../../libs/storage.js';
 
 import Logo from '../../Components/Logo.js';
 
@@ -70,7 +71,19 @@ export default class SignInView extends Component {
                            email: this.state.email,
                            password: this.state.password
                         }, res);
-                        this.props.navigator.push({title: 'ListRestoView'});
+
+                        storage.get('@Ticket', (err, val) => {
+                           if (!err && val) {
+                              this.props.navigator.push({
+                                 title: 'OrderView',
+                                 params: {
+                                    ticket: JSON.parse(val)
+                                 }
+                              });
+                           } else {
+                              this.props.navigator.push({title: 'ListRestoView'});
+                           }
+                        });
                      } else {
                         Alert.alert('', res.message);
                         this.setState({emailError: "", passwordError: ""});
@@ -201,8 +214,8 @@ var nativeStyles = {
       fontWeight: '600'
    },
    buttonTextWhite: {
-     fontSize: 19,
-     fontWeight: '700',
-     color: 'white'
+      fontSize: 19,
+      fontWeight: '700',
+      color: 'white'
    }
 };

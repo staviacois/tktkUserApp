@@ -6,7 +6,10 @@ import {
    ScrollView,
    TextInput,
    TouchableHighlight,
-   Alert
+   Alert,
+   Dimensions,
+   Linking,
+   Platform
 } from 'react-native';
 import {
    Container,
@@ -34,6 +37,7 @@ import {
 import {createContainer} from 'react-native-meteor';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
+import * as storage from '../../libs/storage.js';
 
 class OrderView extends Component {
 
@@ -88,11 +92,13 @@ class OrderView extends Component {
 
    renderRecap() {
       if (this.props.ticket || this.props.archive) {
+         ticket = this.props.ticket || this.props.archive;
+
          const tab = [];
 
          let total = 0;
 
-         this.props.ticket.order.forEach((article) => {
+         ticket.order.forEach((article) => {
             total += article.count * article.price;
             tab.push(
                <ListItem key={article.name}>
@@ -109,12 +115,12 @@ class OrderView extends Component {
          return (
             <Card>
                <CardItem>
-                  <Text style={nativeStyles.cardHeaderText}>{this.getText('label_order') + this.props.ticket.number}</Text>
+                  <Text style={nativeStyles.cardHeaderText}>{this.getText('label_order') + ticket.number}</Text>
                </CardItem>
                {tab}
                <CardItem>
                   <Right>
-                     <Text>{this.getText('label_total') + this.props.ticket.payement.orderprice + " CHF"}</Text>
+                     <Text>{this.getText('label_total') + ticket.payement.orderprice + " CHF"}</Text>
                   </Right>
                </CardItem>
             </Card>
@@ -134,78 +140,233 @@ class OrderView extends Component {
    }
 
    renderMessage() {
+      const defaultReturn = (
+         <Card>
+            <CardItem>
+               <Text style={nativeStyles.cardHeaderText}>{this.getText('not_found')}</Text>
+            </CardItem>
+            <CardItem>
+               <Text>{this.getText('not_found_text')}</Text>
+            </CardItem>
+         </Card>
+      );
       if (this.props.ticket) {
+         const infoPay = (
+            <Card key={0}>
+               <CardItem>
+                  <Text>{this.getText('payment_at_reception')}</Text>
+               </CardItem>
+            </Card>
+         );
+
+         const onOpenMap = () => {
+            Linking.openURL(this.props.line.position.url);
+         };
+         const buttonMap = (
+            <CardItem style={nativeStyles.buttonMap} onPress={onOpenMap}>
+               <Text style={nativeStyles.buttonMapText}>{this.getText('open_map')}</Text>
+               <Icon name="arrow-forward"/>
+            </CardItem>
+         );
+
          let r = null;
          switch (this.props.ticket.status) {
             case 10:
-               r = (
-                  <Card>
-                     <CardItem>
-                        <Text style={nativeStyles.cardHeaderText}>{"En attente"}</Text>
-                     </CardItem>
-                     <CardItem>
-                        <Text>{"Votre commande est en attente de validation, une fois acceptée le temps de préparation vous sera indiqué. Vous êtes le prochain."}</Text>
-                     </CardItem>
-                  </Card>
-               );
+               let position = 0;
+               this.props.tickets.forEach((ticket) => {
+                  if (ticket.number < this.props.ticket.number && ticket.status <= 12 && ticket.payement.choice !== -1) {
+                     position++;
+                  }
+               });
+
+               let textPosition = position === 0
+                  ? this.getText('next')
+                  : (position + 1) + this.getText('number_position_suffix');
+
+               r = [(
+                     <Card key={1}>
+                        <CardItem>
+                           <Icon name='timer'/>
+                           <Text style={nativeStyles.cardHeaderText}>{this.getText('waiting')}</Text>
+                        </CardItem>
+                        <CardItem>
+                           <Text>{this.getText('waiting_text1') + " " + this.getText('waiting_text2') + " " + textPosition + " " + this.getText('waiting_text3')}</Text>
+                        </CardItem>
+                        {buttonMap}
+                     </Card>
+                  ), infoPay];
                break;
             case 15:
-               r = (
-                  <Card>
-                     <CardItem>
-                        <Text style={nativeStyles.cardHeaderText}>{"En préparation"}</Text>
-                     </CardItem>
-                     <CardItem>
-                        <Text>{"Votre commande est en préparation. Elle sera prête dans environ " + this.state.time + " minutes."}</Text>
-                     </CardItem>
-                  </Card>
-               );
+               r = [(
+                     <Card key={1}>
+                        <CardItem>
+                           <Icon name='time'/>
+                           <Text style={nativeStyles.cardHeaderText}>{this.getText('preparation')}</Text>
+                        </CardItem>
+                        <CardItem>
+                           <Text>{this.getText('preparation_text1') + " " + this.state.time + " " + this.getText('preparation_text2_' + (this.state.time > 1
+                                 ? 'p'
+                                 : 's'))}</Text>
+                        </CardItem>
+                        {buttonMap}
+                     </Card>
+                  ), infoPay];
                break;
             case 20:
-               r = (
-                  <Card>
-                     <CardItem>
-                        <Text style={nativeStyles.cardHeaderText}>{"C'est prêt !"}</Text>
-                     </CardItem>
-                     <CardItem>
-                        <Text>{"Votre commande est prête, elle vous attend."}</Text>
-                     </CardItem>
-                  </Card>
-               );
+               r = [(
+                     <Card key={1}>
+                        <CardItem>
+                           <Icon name='alarm'/>
+                           <Text style={nativeStyles.cardHeaderText}>{this.getText('ready')}</Text>
+                        </CardItem>
+                        <CardItem>
+                           <Text>{this.getText('ready_text')}</Text>
+                        </CardItem>
+                        {buttonMap}
+                     </Card>
+                  ), infoPay];
+               break;
+            case 25:
+               r = [(
+                     <Card key={1}>
+                        <CardItem>
+                           <Icon name='alarm'/>
+                           <Text style={nativeStyles.cardHeaderText}>{this.getText('delivery')}</Text>
+                        </CardItem>
+                        <CardItem>
+                           <Text>{this.getText('delivery_text')}</Text>
+                        </CardItem>
+                     </Card>
+                  ), infoPay];
                break;
             case 27:
-               r = (
-                  <Card>
-                     <CardItem>
-                        <Text style={nativeStyles.cardHeaderText}>{"Commande non-collectée"}</Text>
-                     </CardItem>
-                     <CardItem>
-                        <Text>{"Veuillez contacter le restaurateur pour débloquer votre commande"}</Text>
-                     </CardItem>
-                     <CardItem>
-                        <Text style={nativeStyles.important}>{this.props.ticket.phonenumber}</Text>
-                     </CardItem>
-                  </Card>
-               );
+               r = [(
+                     <Card key={1}>
+                        <CardItem>
+                           <Text style={nativeStyles.cardHeaderText}>{this.getText('blocked')}</Text>
+                        </CardItem>
+                        <CardItem>
+                           <Text>{this.getText('blocked_text')}</Text>
+                        </CardItem>
+                        <CardItem>
+                           <Text style={nativeStyles.important}>{this.props.ticket.phonenumber}</Text>
+                        </CardItem>
+                     </Card>
+                  ), infoPay];
+               break;
+            default:
+               r = defaultReturn;
                break;
          }
          return r;
       } else if (this.props.archive) {
-         return (
-            <Card>
-               <CardItem>
-                  <Text style={nativeStyles.cardHeaderText}>{"Terminé"}</Text>
-               </CardItem>
-               <CardItem>
-                  <Text>{"Merci d'avoir utilisé tktk !"}</Text>
-               </CardItem>
-            </Card>
-         );
+         let r = null;
+
+         switch (this.props.archive.status) {
+            case 30:
+               r = (
+                  <Card>
+                     <CardItem>
+                        <Text style={nativeStyles.cardHeaderText}>{this.getText('end')}</Text>
+                     </CardItem>
+                     <CardItem>
+                        <Text>{this.getText('end_text')}</Text>
+                     </CardItem>
+                  </Card>
+               );
+               break;
+            case 70:
+               r = (
+                  <Card>
+                     <CardItem>
+                        <Text style={nativeStyles.cardHeaderText}>{this.getText('canceled')}</Text>
+                     </CardItem>
+                     <CardItem>
+                        <Text>{this.getText('canceled_text')}</Text>
+                     </CardItem>
+                  </Card>
+               );
+               break;
+            case 80:
+               r = (
+                  <Card>
+                     <CardItem>
+                        <Text style={nativeStyles.cardHeaderText}>{this.getText('end')}</Text>
+                     </CardItem>
+                     <CardItem>
+                        <Text>{this.getText('end_text')}</Text>
+                     </CardItem>
+                  </Card>
+               );
+               break;
+            default:
+               r = defaultReturn;
+               break;
+         }
+
+         return r;
       } else {
-         return (
-            <Text>Indisponible</Text>
+         return defaultReturn;
+      }
+   }
+
+   renderFooter() {
+      let r = null;
+      if (this.props.ticket && this.props.ticket.status === 10) {
+         const onPress = () => {
+            const payload = {
+               ticketid: this.props.ticket._id,
+               tokenticket: this.props.params.ticket.token
+            }
+
+            const cbSuccess = (err, res) => {
+               if (err) {
+                  Alert.alert('', this.getText("generic_error_message") + " (" + err.error + ")");
+               } else {
+                  if (!res.problem) {
+                     storage.remove('@Ticket', (err) => {
+                        if (!err) {
+                           this.props.navigator.push({title: 'ListRestoView', anim: 1});
+                        }
+                     });
+                  } else {
+                     Alert.alert('', res.message);
+                  }
+               }
+            };
+
+            asyncApi.callAsyncServer('cancelTicket', payload, cbSuccess, () => {}, true);
+         };
+         r = (
+            <Footer>
+               <Body>
+                  <Button onPress={onPress} info full>
+                     <Text style={nativeStyles.footerButtonText}>{this.getText('label_cancel')}</Text>
+                  </Button>
+               </Body>
+            </Footer>
+         );
+      } else if (this.props.archive) {
+         const onPress = () => {
+            storage.remove('@Ticket', (err) => {
+               if (!err) {
+                  this.props.navigator.push({title: 'ListRestoView', anim: 1});
+               }
+            });
+         };
+
+         r = (
+            <Footer>
+               <Body>
+                  <Button onPress={onPress} info full>
+                     <Text style={nativeStyles.footerButtonText}>{this.getText('label_end')}</Text>
+                  </Button>
+               </Body>
+            </Footer>
          );
       }
+
+      return r;
    }
 
    render() {
@@ -214,6 +375,7 @@ class OrderView extends Component {
 
       const actions = this.getAction();
 
+      /*
       console.log("-------- Les props : ----------");
       console.log("--- (params) ticket :");
       console.log(this.props.params.ticket);
@@ -224,35 +386,40 @@ class OrderView extends Component {
       console.log("--- archive :");
       console.log(this.props.archive);
       console.log("-------------------------------");
+      */
 
-      const footerEnabled = true;
+      if (this.props.ready) {
 
-      const footerButtonStyle = {};
-
-      const footerMessage = "footer";
-
-      return (
-         <Container>
-            <Header>
-               <Left/>
-               <Body>
-                  <Title>{this.getText('text_header') + this.props.line.linename}</Title>
-               </Body>
-               <Right/>
-            </Header>
-            <Content>
-               {this.renderMessage()}
-               {this.renderRecap()}
-            </Content>
-            <Footer>
-               <Body>
-                  <Button onPress={() => console.log("teset")} disabled={!footerEnabled} info full style={footerButtonStyle}>
-                     <Text style={nativeStyles.footerButtonText}>{footerMessage}</Text>
-                  </Button>
-               </Body>
-            </Footer>
-         </Container>
-      );
+         return (
+            <Container>
+               <Header>
+                  <Left/>
+                  <Body>
+                     <Title>{this.getText('text_header') + this.props.line.linename}</Title>
+                  </Body>
+                  <Right/>
+               </Header>
+               <Content>
+                  {this.renderMessage()}
+                  {this.renderRecap()}
+               </Content>
+               {this.renderFooter()}
+            </Container>
+         );
+      } else {
+         return (
+            <Container>
+               <Header>
+                  <Left/>
+                  <Body>
+                     <Title>{this.getText('text_header')}</Title>
+                  </Body>
+                  <Right/>
+               </Header>
+               <Content></Content>
+            </Container>
+         );
+      }
    }
 }
 
@@ -265,11 +432,15 @@ const nativeStyles = {
       color: 'white',
       fontWeight: '700'
    },
-   footerButtonDisabled: {
-      backgroundColor: '#b5b5b5'
-   },
    important: {
       fontWeight: '600'
+   },
+   buttonMap: {
+      justifyContent: 'flex-end'
+   },
+   buttonMapText: {
+      fontWeight: '600',
+      marginRight: 20
    }
 };
 
@@ -299,8 +470,15 @@ export default createContainer(props => {
       connected: asyncApi.checkConnection(),
       ready: handleSubs.ready(),
       line: asyncApi.findOne('lines', {urlname: props.params.ticket.urlname}),
-      ticket: asyncApi.findOne('tickets'),
-      archive: asyncApi.findOne('tickets_arch')
+      ticket: asyncApi.findOne('tickets', {
+         urlname: props.params.ticket.urlname,
+         number: props.params.ticket.number
+      }),
+      archive: asyncApi.findOne('tickets_arch', {
+         urlname: props.params.ticket.urlname,
+         number: props.params.ticket.number
+      }),
+      tickets: asyncApi.find('tickets')
    }
 
    return data;

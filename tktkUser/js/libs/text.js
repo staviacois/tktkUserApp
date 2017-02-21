@@ -92,7 +92,34 @@ const text = {
     "OrderView": {
         "text_header": "Restaurant : ",
         "label_order": "Commande N°",
-        "label_total": "Total à payer : "
+        "label_total": "Total à payer : ",
+        "label_cancel": "Annuler",
+        "label_end": "Terminer",
+        "generic_error_message": "Une erreur s'est produite",
+        "not_found": "Inexistant",
+        "not_found_text": "Le ticket a été terminé, refusé ou n'existe pas",
+        "payment_at_reception": "Le payement de votre commande se fera à la réception de celle-ci",
+        "open_map": "Où ça ? Voir sur la map",
+        "next": "prochain",
+        "number_position_suffix": "ème",
+        "waiting": "En attente",
+        "waiting_text1": "Votre commande est en attente de validation, une fois acceptée le temps de préparation vous sera indiqué.",
+        "waiting_text2": "Vous êtes le",
+        "waiting_text3": "dans la file d'attente",
+        "preparation": "En préparation",
+        "preparation_text1": "Votre commande est en préparation. Elle sera prête dans environ",
+        "preparation_text2_s": "minute.",
+        "preparation_text2_p": "minutes.",
+        "ready": "C'est prêt !",
+        "ready_text": "Votre commande est prête, elle vous attend.",
+        "delivery": "Livraison",
+        "delivery_text": "Votre commande est prête et vous sera livrée bientôt.",
+        "blocked": "Commande non-collectée",
+        "blocked_text": "Veuillez contacter le restaurateur pour débloquer votre commande",
+        "end": "Terminé",
+        "end_text": "Merci d'avoir utilisé tktk !",
+        "canceled": "Désolé :/",
+        "canceled_text": "Votre commande a été refusée. Si vous l'aviez prépayée, votre payement a été annulé."
     }
 }
 

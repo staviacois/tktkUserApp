@@ -34,6 +34,7 @@ import {
 import {createContainer} from 'react-native-meteor';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
+import * as storage from '../../libs/storage.js';
 
 class EndOrderView extends Component {
 
@@ -92,6 +93,11 @@ class EndOrderView extends Component {
                      type: 0
                   }
                }
+               if (this.state.deliverCheck) {
+                  payload.delivery = {
+                     adress: this.state.address
+                  };
+               }
 
                const cbSuccess = (err, res) => {
                   if (err) {
@@ -100,6 +106,7 @@ class EndOrderView extends Component {
                   } else {
                      if (!res.problem) {
                         this.setState({nameError: "", telError: "", addressError: ""});
+                        storage.set('@Ticket', JSON.stringify(res), () => {});
                         this.props.navigator.push({
                            title: 'OrderView',
                            params: {
