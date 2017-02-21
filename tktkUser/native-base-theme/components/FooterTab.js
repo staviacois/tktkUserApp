@@ -50,6 +50,7 @@ export default (variables = variable) => {
         },
         'NativeBase.Icon': {
           color: variables.tabBarTextColor,
+          fontSize: 35
         },
         'NativeBase.IconNB': {
           color: variables.tabBarTextColor,

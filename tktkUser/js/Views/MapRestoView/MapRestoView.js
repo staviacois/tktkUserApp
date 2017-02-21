@@ -29,7 +29,9 @@ import {
    Form,
    Card,
    CardItem,
-   Spinner
+   Spinner,
+   Footer,
+   FooterTab
 } from 'native-base';
 import {createContainer} from 'react-native-meteor';
 import MapView from 'react-native-maps';
@@ -88,8 +90,8 @@ class MapRestoView extends Component {
 
    getAction() {
       return {
-         showView: (title) => {
-            this.props.navigator.push({title: title});
+         showView: (title, anim = 0) => {
+            this.props.navigator.push({title: title, anim: anim});
          },
          searchWithLocation: () => {
             if (this.state.pos) {
@@ -258,11 +260,7 @@ class MapRestoView extends Component {
       return (
          <Container>
             <Header>
-               <Left>
-                  <Button onPress={this.props.commonFuncs.onOpenMenu} transparent>
-                     <Icon name='menu'/>
-                  </Button>
-               </Left>
+               <Left/>
                <Body>
                   <Title>{this.getText('text_header')}</Title>
                </Body>
@@ -273,6 +271,19 @@ class MapRestoView extends Component {
                </Right>
             </Header>
             {content}
+            <Footer>
+               <FooterTab>
+                  <Button onPress={() => actions.showView('AccountView', 1)}>
+                     <Icon name="person"/>
+                  </Button>
+                  <Button onPress={() => actions.showView('ListRestoView', 1)}>
+                     <Icon name="list"/>
+                  </Button>
+                  <Button active>
+                     <Icon active name="compass"/>
+                  </Button>
+               </FooterTab>
+            </Footer>
          </Container>
       );
    }

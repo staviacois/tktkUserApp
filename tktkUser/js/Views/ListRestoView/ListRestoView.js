@@ -26,7 +26,9 @@ import {
    Item,
    Form,
    Card,
-   CardItem
+   CardItem,
+   Footer,
+   FooterTab
 } from 'native-base';
 import {createContainer} from 'react-native-meteor';
 import Resto from './Resto.js';
@@ -95,8 +97,8 @@ class ListRestoView extends Component {
 
    getAction() {
       return {
-         showView: (title) => {
-            this.props.navigator.push({title: title});
+         showView: (title, anim = 0) => {
+            this.props.navigator.push({title: title, anim: anim});
          },
          search: () => {
             // Search lines by NPA
@@ -334,11 +336,7 @@ class ListRestoView extends Component {
       return (
          <Container>
             <Header>
-               <Left>
-                  <Button onPress={this.props.commonFuncs.onOpenMenu} transparent>
-                     <Icon name='menu'/>
-                  </Button>
-               </Left>
+               <Left/>
                <Body>
                   <Title>{this.getText('text_header')}</Title>
                </Body>
@@ -349,6 +347,19 @@ class ListRestoView extends Component {
                </Right>
             </Header>
             <Content>{content}</Content>
+            <Footer>
+               <FooterTab>
+                  <Button onPress={() => actions.showView('AccountView', 1)}>
+                     <Icon name="person"/>
+                  </Button>
+                  <Button active>
+                     <Icon active name="list"/>
+                  </Button>
+                  <Button onPress={() => actions.showView('MapRestoView')}>
+                     <Icon name="compass"/>
+                  </Button>
+               </FooterTab>
+            </Footer>
          </Container>
       );
    }

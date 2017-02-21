@@ -12,7 +12,6 @@ import {
    Animated
 } from 'react-native';
 import {Container, Button, Icon, StyleProvider} from 'native-base';
-import SideMenu from 'react-native-side-menu';
 import * as asyncApi from './libs/asyncApi.js';
 import * as storage from './libs/storage.js';
 import * as text from './libs/text.js';
@@ -42,14 +41,12 @@ export default class App extends Component {
          lastLogin: {
             email: "",
             password: ""
-         },
-         menuIsOpen: false
+         }
       };
 
       // Bind functions to this
       this.handleSignIn = this.handleSignIn.bind(this);
       this.handleSignOut = this.handleSignOut.bind(this);
-      this.handleOpenMenu = this.handleOpenMenu.bind(this);
    }
 
    componentWillMount() {
@@ -88,19 +85,6 @@ export default class App extends Component {
       // Remove login from state and redirect to HomeView
       this.setState({login: null});
       this.navigator.push({title: 'HomeView', anim: 2});
-   }
-
-   handleOpenMenu() {
-      // Open the menu
-      this.setState({menuIsOpen: true});
-   }
-
-   handleMenuPress(label, shouldPush) {
-      // Close the menu and redirect to view if needed
-      if (shouldPush) {
-         this.navigator.push({title: label});
-      }
-      this.setState({menuIsOpen: false});
    }
 
    render() {
@@ -142,59 +126,8 @@ export default class App extends Component {
          }
       }}/>);
 
-      // Define menu animation function
-      const animFunction = (prop, value) => {
-         return Animated.spring(prop, {
-            toValue: value,
-            friction: 10
-         });
-      }
-
-      // Define menu only if the user did sign in
-      const menu = this.state.login
-         ? this.renderMenu()
-         : null;
-
       // Return the root component of the app
-      return (
-         <View style={styles.superContainer}>
-            <SideMenu disableGestures={true} animationFunction={animFunction} menu={menu} isOpen={this.state.menuIsOpen} onChange={(isOpen) => this.setState({menuIsOpen: isOpen})}>
-               {navig}
-            </SideMenu>
-         </View>
-      );
-   }
-
-   renderMenu() {
-
-      const self = this;
-      const tab = [];
-
-      // For each menu element
-      ["ListRestoView", "MapRestoView", "AccountView"].forEach((elem) => {
-
-         // shouldPush : tells if this menu element represents another view than current showed view
-         let shouldPush = true;
-         const elemStyle = [styles.menuText];
-         const currentRoutes = self.navigator.getCurrentRoutes();
-
-         if (currentRoutes[currentRoutes.length - 1].title === elem) {
-            // If this menu element represents the current showed view, change his style and set shouldPush to false
-            elemStyle.push(styles.menuTextActive);
-            shouldPush = false;
-         }
-
-         tab.push(
-            <Text key={elem} onPress={() => this.handleMenuPress(elem, shouldPush)} style={elemStyle}>{text.getText('menu_label.' + elem, true)}</Text>
-         );
-      });
-
-      // Return a scrollable view containing all menu elements
-      return (
-         <ScrollView scrollsToTop={false}>
-            {tab}
-         </ScrollView>
-      );
+      return navig;
    }
 
    renderScene(route, navigator) {
@@ -207,7 +140,6 @@ export default class App extends Component {
 
       // commonFuncs: functions that every view should be able to access to
       const commonFuncs = {
-         onOpenMenu: this.handleOpenMenu
       };
 
       // Chose right view to show
@@ -254,28 +186,4 @@ export default class App extends Component {
    }
 }
 
-var styles = StyleSheet.create({
-   superContainer: {
-      flex: 1,
-      backgroundColor: 'rgb(64, 70, 75)'
-   },
-   menuText: {
-      color: 'white',
-      fontSize: 17,
-      height: 60,
-      lineHeight: 60,
-      padding: 0,
-      fontWeight: '700',
-      paddingLeft: 10
-   },
-   menuTextActive: {
-      color: '#aaa',
-      backgroundColor: '#33383C'
-   },
-   iconBack: {
-      fontSize: 40,
-      alignSelf: 'center',
-      justifyContent: 'center',
-      alignItems: 'center'
-   }
-});
+var styles = StyleSheet.create({});

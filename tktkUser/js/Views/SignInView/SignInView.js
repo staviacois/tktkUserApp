@@ -26,7 +26,6 @@ import {
    Item,
    Form
 } from 'native-base';
-import SideMenu from 'react-native-side-menu';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
 import * as storage from '../../libs/storage.js';

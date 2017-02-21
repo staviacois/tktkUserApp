@@ -24,9 +24,10 @@ import {
    Input,
    Label,
    Item,
-   Form
+   Form,
+   Footer,
+   FooterTab
 } from 'native-base';
-import SideMenu from 'react-native-side-menu';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
 
@@ -69,32 +70,45 @@ export default class AccountView extends Component {
       return (
          <Container>
             <Header>
-               <Left>
-                  <Button onPress={this.props.commonFuncs.onOpenMenu} transparent>
-                     <Icon name='menu'/>
-                  </Button>
-               </Left>
+               <Left/>
                <Body>
                   <Title>{this.getText('text_header')}</Title>
                </Body>
-               <Right/>
+               <Right>
+                  <Button onPress={this.props.onSignOut} transparent>
+                     <Icon name='log-out'/>
+                  </Button>
+               </Right>
             </Header>
             <Content>
                <Form>
-                  <Item style={nativeStyles.input} stackedLabel>
+                  <Item disabled style={nativeStyles.input} stackedLabel>
                      <Label>{this.getText('label_name')}</Label>
                      <Input disabled onChangeText={(name) => this.setState({name, nameError: ""})} value={this.state.name}/>
                   </Item>
-                  <Item style={nativeStyles.input} stackedLabel>
+                  <Item disabled style={nativeStyles.input} stackedLabel>
                      <Label>{this.getText('label_tel')}</Label>
                      <Input disabled onChangeText={(tel) => this.setState({tel, telError: ""})} value={this.state.tel}/>
                   </Item>
-                  <Item style={nativeStyles.input} stackedLabel>
+                  <Item disabled style={nativeStyles.input} stackedLabel>
                      <Label>{this.getText('label_address')}</Label>
                      <Input disabled onChangeText={(address) => this.setState({address, addressError: ""})} value={this.state.address}/>
                   </Item>
                </Form>
             </Content>
+            <Footer>
+               <FooterTab>
+                  <Button active>
+                     <Icon active name="person"/>
+                  </Button>
+                  <Button onPress={() => actions.showView('ListRestoView')}>
+                     <Icon name="list"/>
+                  </Button>
+                  <Button onPress={() => actions.showView('MapRestoView')}>
+                     <Icon name="compass"/>
+                  </Button>
+               </FooterTab>
+            </Footer>
          </Container>
       );
    }
