@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View, Text} from 'react-native';
 import {
    Container,
-   Header,
    Content,
    Title,
    Icon,
@@ -14,6 +13,7 @@ import {
 } from 'native-base';
 import * as text from '../../libs/text.js';
 import Logo from '../../Components/Logo.js';
+import Header from '../../Components/Header.js';
 
 export default class HomeView extends Component {
    // This view is the default view at application startup
@@ -44,17 +44,15 @@ export default class HomeView extends Component {
 
       return (
          <Container>
-            <Header>
-               <Left/>
-               <Body>
-                  <Title>{this.getText('text_header')}</Title>
-               </Body>
-               <Right/>
-            </Header>
+               <Header>
+                  <Left/>
+                  <Body>
+                     <Title>{this.getText('text_header')}</Title>
+                  </Body>
+                  <Right/>
+               </Header>
             <Content>
-               <View style={nativeStyles.logoContainer}>
-                  <Logo/>
-               </View>
+               <Logo/>
                <View>
                   <List>
                      <ListItem button onPress={() => actions.showView('SignInView')}>
@@ -81,10 +79,4 @@ export default class HomeView extends Component {
    }
 }
 
-var nativeStyles = {
-   logoContainer: {
-      height: 150,
-      marginTop: 20,
-      marginBottom: 80
-   }
-};
+var nativeStyles = {};

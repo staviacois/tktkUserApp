@@ -1,29 +1,35 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
+import {View, Image} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class Logo extends Component {
 
    render() {
-      //return (<Image source={require('../../images/logo.png')}/>);
-
       return (
-         <View>
-            <Text style={styles.q}>L</Text>
-            <Text style={styles.manager}>logo</Text>
+         <View style={nativeStyles.logoContainer}>
+            <LinearGradient start={{
+               x: 0.0,
+               y: 0.0
+            }} end={{
+               x: 0.5,
+               y: 1.0
+            }} colors={['#E53919', '#EC5E18']} style={nativeStyles.logoSubContainer}>
+               <Image source={require('../../images/logo.png')}/>
+            </LinearGradient>
          </View>
       );
    }
 }
 
-var styles = StyleSheet.create({
-   q: {
-      fontSize: 130,
-      textAlign: 'center',
-      color: '#E90314'
+var nativeStyles = {
+   logoContainer: {
+      marginTop: 35,
+      marginBottom: 25,
+      justifyContent: 'center',
+      alignItems: 'center'
    },
-   manager: {
-      fontSize: 30,
-      textAlign: 'center',
-      color: '#E90314'
+   logoSubContainer: {
+      padding: 20,
+      borderRadius: 40
    }
-});
+}

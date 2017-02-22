@@ -33,7 +33,8 @@ const text = {
         "error_empty": "Remplissez ce champ",
         "generic_error_message": "Une erreur s'est produite",
         "text_header": "Se connecter",
-        "label_forgotten_password": "J'ai oublié mon mot de passe"
+        "label_forgotten_password": "J'ai oublié mon mot de passe",
+        "label_signinfb_button": "Se connecter avec FB"
     },
     "ForgotPswView": {
         "text_header": "J'ai oublié mon mot de passe",

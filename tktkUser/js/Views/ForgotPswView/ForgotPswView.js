@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View, Text, Alert} from 'react-native';
 import {
    Container,
-   Header,
    Content,
    Title,
    Icon,
@@ -18,6 +17,7 @@ import {
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
 import Logo from '../../Components/Logo.js';
+import Header from '../../Components/Header.js';
 
 export default class ForgotPswView extends Component {
    // This view is used to recover password if forgotten
@@ -123,9 +123,7 @@ export default class ForgotPswView extends Component {
                <Right/>
             </Header>
             <Content>
-               <View style={nativeStyles.logoContainer}>
-                  <Logo/>
-               </View>
+               <Logo/>
                <Form>
                   <Item stackedLabel error={boolError(emailError)}>
                      <Label>{this.getText('label_email')}</Label>
@@ -143,11 +141,6 @@ export default class ForgotPswView extends Component {
 }
 
 var nativeStyles = {
-   logoContainer: {
-      height: 150,
-      marginTop: 20,
-      marginBottom: 80
-   },
    errorLabel: {
       paddingLeft: 25,
       color: '#a94442',

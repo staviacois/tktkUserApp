@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Text, Alert, Linking} from 'react-native';
 import {
    Container,
-   Header,
    Content,
    Title,
    Icon,
@@ -19,6 +18,7 @@ import {createContainer} from 'react-native-meteor';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
 import * as storage from '../../libs/storage.js';
+import Header from '../../Components/Header.js';
 
 class OrderView extends Component {
    // This view shows the state and informations about a ticket

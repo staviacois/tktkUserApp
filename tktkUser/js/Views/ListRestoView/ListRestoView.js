@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View, Text} from 'react-native';
 import {
    Container,
-   Header,
    Content,
    Title,
    Icon,
@@ -22,6 +21,7 @@ import {createContainer} from 'react-native-meteor';
 import Resto from './Resto.js';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
+import Header from '../../Components/Header.js';
 
 class ListRestoView extends Component {
    // This view shows a list of lines

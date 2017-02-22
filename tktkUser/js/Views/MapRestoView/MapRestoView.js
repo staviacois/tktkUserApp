@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View, Text, Dimensions} from 'react-native';
 import {
    Container,
-   Header,
    Title,
    Icon,
    Left,
@@ -24,6 +23,7 @@ import DismissKeyboard from 'dismissKeyboard';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
 import Resto from '../ListRestoView/Resto.js';
+import Header from '../../Components/Header.js';
 
 class MapRestoView extends Component {
    // This view shows a map showing user's position, and position of nearby lines

@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View, Text, Alert} from 'react-native';
 import {
    Container,
-   Header,
    Content,
    Title,
    Icon,
@@ -14,9 +13,11 @@ import {
    Item,
    Form
 } from 'native-base';
+import FBSDK, {LoginButton, AccessToken, LoginManager} from 'react-native-fbsdk';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
 import * as storage from '../../libs/storage.js';
+import Header from '../../Components/Header.js';
 
 import Logo from '../../Components/Logo.js';
 
@@ -90,6 +91,58 @@ export default class SignInView extends Component {
 
                asyncApi.callAsyncServer('login', payload, cbSuccess, cbError, true);
             }
+         },
+         signInFB: () => {
+            const cbError = (error) => {
+               console.log(error);
+            };
+
+            const cbLoginFBOk = (infosFB) => {
+               this.setState({test: true});
+
+               const payload = {
+                  accessToken: infosFB.accessToken,
+                  userID: infosFB.userID
+               }
+
+               const cbSuccess = (err, res) => {
+                  if (err) {
+                     Alert.alert('', this.getText("generic_error_message") + " (" + err.error + ")");
+                     this.setState({emailError: "", passwordError: ""});
+                  } else {
+                     if (!res.problem) {
+                        this.setState({emailError: "", passwordError: ""});
+
+                        // TODO : LOGIN OK
+                        console.log("LOGIN OK");
+                     } else {
+                        Alert.alert('', res.message);
+                        this.setState({emailError: "", passwordError: ""});
+                     }
+                  }
+               };
+
+               const cbError = () => {
+                  this.setState({emailError: "", passwordError: ""});
+               }
+
+               asyncApi.callAsyncServer('loginFB', payload, cbSuccess, cbError, true);
+
+            };
+
+            const cbSuccess = (data) => {
+               if (data) {
+                  cbLoginFBOk(data);
+               } else {
+                  const cbSuccess = (result) => {
+                     if (!result.isCancelled) {
+                        AccessToken.getCurrentAccessToken().then(cbLoginFBOk, cbError);
+                     }
+                  };
+                  LoginManager.logInWithReadPermissions(['email, user_location']).then(cbSuccess, cbError);
+               }
+            };
+            AccessToken.getCurrentAccessToken().then(cbSuccess, cbError);
          }
       };
    }
@@ -159,9 +212,7 @@ export default class SignInView extends Component {
                <Right/>
             </Header>
             <Content>
-               <View style={nativeStyles.logoContainer}>
-                  <Logo/>
-               </View>
+               <Logo/>
                <Form>
                   <Item error={boolError(emailError)}>
                      <Input placeholder={this.getText('form_label.email')} onSubmitEditing={onSubmit} autoCorrect={false} onChangeText={(email) => this.setState({email, emailError: ""})} value={this.state.email}/>{emailError}
@@ -171,6 +222,9 @@ export default class SignInView extends Component {
                   </Item>
                   <Button style={nativeStyles.signInButton} info onPress={actions.signIn}>
                      <Text style={nativeStyles.buttonTextWhite}>{this.getText('label_signin_button')}</Text>
+                  </Button>
+                  <Button style={nativeStyles.noAccountButton} info onPress={actions.signInFB}>
+                     <Text style={nativeStyles.buttonTextWhite}>{this.getText('label_signinfb_button')}</Text>
                   </Button>
                   <Button style={nativeStyles.noAccountButton} light onPress={() => actions.showView('ForgotPswView')}>
                      <Text style={nativeStyles.buttonText}>{this.getText('label_forgotten_password')}</Text>
@@ -183,11 +237,6 @@ export default class SignInView extends Component {
 }
 
 var nativeStyles = {
-   logoContainer: {
-      height: 150,
-      marginTop: 20,
-      marginBottom: 80
-   },
    errorLabel: {
       paddingRight: 10,
       color: '#a94442',

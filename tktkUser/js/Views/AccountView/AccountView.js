@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {
    Container,
-   Header,
    Content,
    Title,
    Icon,
@@ -17,6 +16,7 @@ import {
    FooterTab
 } from 'native-base';
 import * as text from '../../libs/text.js';
+import Header from '../../Components/Header.js';
 
 export default class AccountView extends Component {
    // This view is used to show and edit user's informations
@@ -51,7 +51,6 @@ export default class AccountView extends Component {
    }
 
    render() {
-      console.log(this.props.login);
       const actions = this.getAction();
 
       return (

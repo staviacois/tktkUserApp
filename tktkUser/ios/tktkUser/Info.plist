@@ -133,5 +133,25 @@
       <string>SanFranciscoThin.ttf</string>
       <string>Zocial.ttf</string>
     </array>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>fbTODO : App ID</string>
+        </array>
+      </dict>
+    </array>
+    <key>FacebookAppID</key>
+    <string>TODO : App ID</string>
+    <key>FacebookDisplayName</key>
+    <string>tktkTest</string>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>fbapi</string>
+      <string>fb-messenger-api</string>
+      <string>fbauth2</string>
+      <string>fbshareextension</string>
+    </array>
   </dict>
 </plist>

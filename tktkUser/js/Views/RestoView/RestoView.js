@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Text, Linking} from 'react-native';
 import {
    Container,
-   Header,
    Content,
    Title,
    Icon,
@@ -19,6 +18,7 @@ import {createContainer} from 'react-native-meteor';
 import Article from './Article.js';
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
+import Header from '../../Components/Header.js';
 
 class RestoView extends Component {
    // This view shows infos and articles from a line
