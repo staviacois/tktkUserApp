@@ -90,7 +90,8 @@ class EndOrderView extends Component {
 
         const {
           params,
-          line
+          line,
+          login
         } = this.props;
 
         if (this.validateForm()) {
@@ -131,7 +132,7 @@ class EndOrderView extends Component {
               if (!res.problem) {
                 this.setState({nameError: "", telError: "", addressError: ""});
                 // Stores the ticket
-                storage.set('@Ticket', JSON.stringify(res), () => {});
+                storage.set('@Ticket' + login._id, JSON.stringify(res), () => {});
                 navigator.push({
                   title: 'OrderView',
                   params: {

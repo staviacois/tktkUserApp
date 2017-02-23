@@ -79,7 +79,7 @@ export default class SignInView extends Component {
                 }, res);
 
                 // Get the current ticket from storage
-                storage.get('@Ticket', (err, val) => {
+                storage.get('@Ticket' + res._id, (err, val) => {
                   if (!err && val) {
                     // If there is a ticket, show OrderView
                     this.props.navigator.push({
@@ -117,7 +117,8 @@ export default class SignInView extends Component {
 
           const payload = {
             accessToken: infosFB.accessToken,
-            userID: infosFB.userID
+            userID: infosFB.userID,
+            loginlevel: 1
           }
 
           const cbSuccess = (err, res) => {
@@ -128,8 +129,33 @@ export default class SignInView extends Component {
               if (!res.problem) {
                 this.setState({emailError: "", passwordError: ""});
 
-                // TODO : LOGIN OK
-                console.log("LOGIN OK");
+                // Let the App component handle the storage of the login
+                this.props.onSignIn({
+                  email: "",
+                  password: ""
+                }, res);
+
+                if (res.docid) {
+                  // Get the current ticket from storage
+                  storage.get('@Ticket' + res._id, (err, val) => {
+                    if (!err && val) {
+                      // If there is a ticket, show OrderView
+                      this.props.navigator.push({
+                        title: 'OrderView',
+                        params: {
+                          ticket: JSON.parse(val)
+                        }
+                      });
+                    } else {
+                      // Else, show ListRestoView
+                      this.props.navigator.push({title: 'ListRestoView'});
+                    }
+                  });
+                } else {
+                  this.props.navigator.push({title: 'FillInfosView'});
+                }
+
+                console.log(res);
               } else {
                 Alert.alert('', res.message);
                 this.setState({emailError: "", passwordError: ""});
