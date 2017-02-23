@@ -164,7 +164,7 @@ export default class App extends Component {
       content = (<OrderView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login}/>);
       break;
       case 'FillInfosView':
-      content = (<FillInfosView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login}/>);
+      content = (<FillInfosView navigator={navigator} params={route.params} commonFuncs={commonFuncs} login={this.state.login} onSignIn={this.handleSignIn}/>);
       break;
     }
 

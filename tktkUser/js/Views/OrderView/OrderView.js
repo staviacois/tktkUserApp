@@ -381,7 +381,8 @@ class OrderView extends Component {
       ticket,
       params,
       navigator,
-      archive
+      archive,
+      login
     } = this.props;
 
     let r = null;
@@ -397,7 +398,7 @@ class OrderView extends Component {
             Alert.alert('', this.getText("generic_error_message") + " (" + err.error + ")");
           } else {
             if (!res.problem) {
-              storage.remove('@Ticket', (err) => {});
+              storage.remove('@Ticket' + login._id, (err) => {});
               navigator.push({title: 'ListRestoView', anim: 1});
             } else {
               Alert.alert('', res.message);
@@ -418,7 +419,7 @@ class OrderView extends Component {
       );
     } else if (archive) {
       const onPress = () => {
-        storage.remove('@Ticket', (err) => {
+        storage.remove('@Ticket' + login._id, (err) => {
           if (!err) {
             navigator.push({title: 'ListRestoView', anim: 1});
           }

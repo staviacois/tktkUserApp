@@ -67,14 +67,17 @@ export default class FillInfosView extends Component {
         if (this.validateForm()) {
 
           const payload = {
-            name: this.state.lastname,
-            firstname: this.state.firstname,
-            email: this.state.email,
-            phonenbr: this.state.tel,
-            hashmdp1: this.state.password,
-            npa: this.state.npa,
-            street: this.state.street,
-            city: this.state.city
+            loginId: this.props.login._id,
+            token: this.props.login.token,
+            userInfos: {
+              name: this.state.lastname,
+              firstname: this.state.firstname,
+              email: this.state.email,
+              phonenbr: this.state.tel,
+              npa: this.state.npa,
+              street: this.state.street,
+              city: this.state.city
+            }
           }
 
           const cbSuccess = (err, res) => {
@@ -87,13 +90,10 @@ export default class FillInfosView extends Component {
                 npaError: "",
                 cityError: "",
                 telError: "",
-                emailError: "",
-                passwordError: "",
-                confirmpasswordError: ""
+                emailError: ""
               });
             } else {
               if (!res.problem) {
-                Alert.alert('', res.message);
                 this.setState({
                   lastname: "",
                   firstname: "",
@@ -102,18 +102,21 @@ export default class FillInfosView extends Component {
                   city: "",
                   tel: "",
                   email: "",
-                  password: "",
-                  confirmpassword: "",
                   lastnameError: "",
                   firstnameError: "",
                   streetError: "",
                   npaError: "",
                   cityError: "",
                   telError: "",
-                  emailError: "",
-                  passwordError: "",
-                  confirmpasswordError: ""
+                  emailError: ""
                 });
+
+                this.props.onSignIn({
+                  email: "",
+                  password: ""
+                }, res);
+                this.props.navigator.push({title: 'ListRestoView'});
+
               } else {
                 Alert.alert('', res.message);
                 this.setState({
@@ -123,9 +126,7 @@ export default class FillInfosView extends Component {
                   npaError: "",
                   cityError: "",
                   telError: "",
-                  emailError: "",
-                  passwordError: "",
-                  confirmpasswordError: ""
+                  emailError: ""
                 });
               }
             }
@@ -139,13 +140,11 @@ export default class FillInfosView extends Component {
               npaError: "",
               cityError: "",
               telError: "",
-              emailError: "",
-              passwordError: "",
-              confirmpasswordError: ""
+              emailError: ""
             });
           };
 
-          asyncApi.callAsyncServer('createNewUser', payload, cbSuccess, cbError);
+          asyncApi.callAsyncServer('createUserForLogin', payload, cbSuccess, cbError);
         }
       }
     };

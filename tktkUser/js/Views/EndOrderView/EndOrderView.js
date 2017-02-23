@@ -91,7 +91,8 @@ class EndOrderView extends Component {
         const {
           params,
           line,
-          login
+          login,
+          navigator
         } = this.props;
 
         if (this.validateForm()) {

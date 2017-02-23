@@ -289,7 +289,7 @@ export default createContainer(props => {
   const data = {
     connected: asyncApi.checkConnection(),
     ready: handleSubs.ready(),
-    line: asyncApi.findOne('lines', {urlname: ticketToUseparams.line.urlname}),
+    line: asyncApi.findOne('lines', {urlname: params.line.urlname}),
     articles: asyncApi.find('items')
   }
 
