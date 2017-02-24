@@ -36,14 +36,18 @@ export default class FillInfosView extends Component {
   constructor(props) {
     super(props);
 
+    console.log(props.params);
+
+    const prefill = props.params.prefillFields;
+
     this.state = {
-      lastname: "",
-      firstname: "",
+      lastname: prefill.lastname ? prefill.lastname : "",
+      firstname: prefill.firstname ? prefill.firstname : "",
       street: "",
       npa: "",
-      city: "",
+      city: prefill.city ? prefill.city : "",
       tel: "",
-      email: "",
+      email: prefill.email ? prefill.email : "",
       lastnameError: "",
       firstnameError: "",
       streetError: "",

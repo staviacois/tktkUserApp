@@ -17,12 +17,12 @@ import {
   Item,
   Form
 } from 'native-base';
-import FBSDK, {LoginButton, AccessToken, LoginManager} from 'react-native-fbsdk';
 
 // libs
 import * as text from '../../libs/text.js';
 import * as asyncApi from '../../libs/asyncApi.js';
 import * as storage from '../../libs/storage.js';
+import * as facebook from '../../libs/facebook.js';
 
 // components
 import Header from '../../Components/Header.js';
@@ -108,82 +108,69 @@ export default class SignInView extends Component {
         }
       },
       signInFB: () => {
-        const cbError = (error) => {
-          console.log(error);
-        };
+        const cbError = () => {
+          this.setState({emailError: "", passwordError: ""});
+        }
 
         const cbLoginFBOk = (infosFB) => {
-          this.setState({test: true});
 
-          const payload = {
-            accessToken: infosFB.accessToken,
-            userID: infosFB.userID,
-            loginlevel: 1
-          }
+          const cbSuccess = (infosUser) => {
 
-          const cbSuccess = (err, res) => {
-            if (err) {
-              Alert.alert('', this.getText("generic_error_message") + " (" + err.error + ")");
-              this.setState({emailError: "", passwordError: ""});
-            } else {
-              if (!res.problem) {
-                this.setState({emailError: "", passwordError: ""});
-
-                // Let the App component handle the storage of the login
-                this.props.onSignIn({
-                  email: "",
-                  password: ""
-                }, res);
-
-                if (res.docid) {
-                  // Get the current ticket from storage
-                  storage.get('@Ticket' + res._id, (err, val) => {
-                    if (!err && val) {
-                      // If there is a ticket, show OrderView
-                      this.props.navigator.push({
-                        title: 'OrderView',
-                        params: {
-                          ticket: JSON.parse(val)
-                        }
-                      });
-                    } else {
-                      // Else, show ListRestoView
-                      this.props.navigator.push({title: 'ListRestoView'});
-                    }
-                  });
-                } else {
-                  this.props.navigator.push({title: 'FillInfosView'});
-                }
-
-                console.log(res);
-              } else {
-                Alert.alert('', res.message);
-                this.setState({emailError: "", passwordError: ""});
-              }
+            const payload = {
+              accessToken: infosUser.accessToken,
+              userID: infosFB.userID,
+              loginlevel: 1
             }
-          };
 
-          const cbError = () => {
-            this.setState({emailError: "", passwordError: ""});
-          }
+            const cbSuccess = (err, res) => {
+              if (err) {
+                Alert.alert('', this.getText("generic_error_message") + " (" + err.error + ")");
+                this.setState({emailError: "", passwordError: ""});
+              } else {
+                if (!res.problem) {
+                  this.setState({emailError: "", passwordError: ""});
 
-          asyncApi.callAsyncServer('loginFB', payload, cbSuccess, cbError, true);
+                  // Let the App component handle the storage of the login
+                  this.props.onSignIn({
+                    email: "",
+                    password: ""
+                  }, res);
 
-        };
-
-        const cbSuccess = (data) => {
-          if (data) {
-            cbLoginFBOk(data);
-          } else {
-            const cbSuccess = (result) => {
-              if (!result.isCancelled) {
-                AccessToken.getCurrentAccessToken().then(cbLoginFBOk, cbError);
+                  if (res.docid) {
+                    // Get the current ticket from storage
+                    storage.get('@Ticket' + res._id, (err, val) => {
+                      if (!err && val) {
+                        // If there is a ticket, show OrderView
+                        this.props.navigator.push({
+                          title: 'OrderView',
+                          params: {
+                            ticket: JSON.parse(val)
+                          }
+                        });
+                      } else {
+                        // Else, show ListRestoView
+                        this.props.navigator.push({title: 'ListRestoView'});
+                      }
+                    });
+                  } else {
+                    this.props.navigator.push({title: 'FillInfosView', params: {prefillFields: infosUser.infosUser}});
+                  }
+                } else {
+                  Alert.alert('', res.message);
+                  this.setState({emailError: "", passwordError: ""});
+                }
               }
             };
-            LoginManager.logInWithReadPermissions(['user_location']).then(cbSuccess, cbError);
-          }
+
+            asyncApi.callAsyncServer('loginFB', payload, cbSuccess, cbError, true);
+
+          };
+
+          facebook.getUserInfos(cbSuccess, cbError);
+
         };
-        AccessToken.getCurrentAccessToken().then(cbSuccess, cbError);
+
+        facebook.loginIfNeeded(cbLoginFBOk);
       }
     };
   }

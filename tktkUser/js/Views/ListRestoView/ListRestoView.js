@@ -209,7 +209,6 @@ class ListRestoView extends Component {
   // ----- Render
 
   render() {
-    console.log(this.props.login);
     if (!this.props.connected)
     this.manageLostConnection();
 
