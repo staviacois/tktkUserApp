@@ -14,8 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends ReactActivity {
-    CallbackManager mCallbackManager =
-            MainApplication.getCallbackManager();
+    CallbackManager mCallbackManager = MainApplication.getCallbackManager();
 
     /**
      * Returns the name of the main component registered from JavaScript.

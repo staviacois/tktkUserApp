@@ -21,33 +21,31 @@ import java.util.List;
 
 import com.BV.LinearGradient.LinearGradientPackage;
 
-public class MainApplication extends Application
-        implements ReactApplication {
+public class MainApplication extends Application implements ReactApplication {
 
-  private static CallbackManager mCallbackManager =
-          CallbackManager.Factory.create();
+  private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
   protected static CallbackManager getCallbackManager() {
     return mCallbackManager;
   }
 
   private final ReactNativeHost mReactNativeHost =
-          new ReactNativeHost(this) {
+  new ReactNativeHost(this) {
 
-            @Override
-            public boolean getUseDeveloperSupport() {
-              return BuildConfig.DEBUG;
-            }
+    @Override
+    public boolean getUseDeveloperSupport() {
+      return BuildConfig.DEBUG;
+    }
 
-            @Override
-            protected List<ReactPackage> getPackages() {
-              return Arrays.<ReactPackage>asList(
-                      new MainReactPackage(),
-                      new FBSDKPackage(mCallbackManager),
-                      new LinearGradientPackage()
-              );
-            }
-          };
+    @Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+      new MainReactPackage(),
+      new FBSDKPackage(mCallbackManager),
+      new LinearGradientPackage()
+      );
+    }
+  };
 
   @Override
   public ReactNativeHost getReactNativeHost() {

@@ -1,0 +1,125 @@
+
+----------------------------------------------------
+------------------ Installer et linker la lib :
+
+
+react-native install react-native-fbsdk
+react-native link react-nativefbsdk
+
+
+
+----------------------------------------------------
+------------------ Configurer le projet Android :
+
+
+----------- Dans MainActivity.java
+
+ - Ajouter ces imports :
+
+import android.content.Intent;
+import android.os.Bundle;
+import com.facebook.FacebookSdk;
+import com.facebook.CallbackManager;
+import java.util.Arrays;
+import java.util.List;
+
+
+ - Ajouter un CallbackManager dans la classe MainActivity :
+
+CallbackManager mCallbackManager = MainApplication.getCallbackManager();
+
+
+ - Ajouter ou remplacer la méthode getPackages dans la classe MainActivity :
+
+@Override
+protected List<ReactPackage> getPackages() {
+  mCallbackManager = new CallbackManager.Factory().create();
+  ReactPackage packages[] = new ReactPackage[]{
+    new MainReactPackage(),
+    new FBSDKPackage(mCallbackManager),
+  };
+  return Arrays.<ReactPackage>asList(packages);
+}
+
+
+ - Ajouter la méthode onActivityResult dans la classe MainActivity :
+
+ @Override
+ public void onActivityResult(int requestCode, int resultCode, Intent data) {
+     super.onActivityResult(requestCode, resultCode, data);
+     mCallbackManager.onActivityResult(requestCode, resultCode, data);
+ }
+
+
+ ---------- Dans MainApplication.java
+
+ - Ajouter ces imports :
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
+import com.facebook.appevents.AppEventsLogger;
+import java.util.Arrays;
+import java.util.List;
+
+
+ - Remplacer la classe MainApplication avec ceci :
+
+ public class MainApplication extends Application
+  implements ReactApplication {
+
+  private static CallbackManager mCallbackManager =
+    CallbackManager.Factory.create();
+
+  protected static CallbackManager getCallbackManager() {
+    return mCallbackManager;
+  }
+
+  private final ReactNativeHost mReactNativeHost =
+    new ReactNativeHost(this) {
+
+    @Override
+    protected boolean getUseDeveloperSupport() {
+      return BuildConfig.DEBUG;
+    }
+
+    @Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+        new MainReactPackage(),
+        new FBSDKPackage(mCallbackManager)
+      );
+    }
+  };
+
+  @Override
+  public ReactNativeHost getReactNativeHost() {
+    return mReactNativeHost;
+  }
+}
+
+ - /!\ Si la méthode getPackages existait déjà dans la classe MainApplication,
+   il faut s'assurer qu'elle contient toujours ce qu'elle contenait avant,
+   par exemple ici on en a besoin pour la lib LinearGradient :
+
+   @Override
+   protected List<ReactPackage> getPackages() {
+     return Arrays.<ReactPackage>asList(
+     new MainReactPackage(),
+     new FBSDKPackage(mCallbackManager),
+     new LinearGradientPackage()
+     );
+   }
+
+ - Configurer le SDK pour Android :
+
+Accéder à ce lien : https://developers.facebook.com/quickstarts/?platform=android
+Depuis là, créer l'app facebook ou en choisir une existante, et suivre les instructions pour configurer le projet Android
+
+
+
+----------------------------------------------------
+------------------ Configurer le projet iOS :
+
+Accéder à ce lien : https://developers.facebook.com/quickstarts/?platform=ios
+Depuis là, créer l'app facebook ou en choisir une existante, et suivre les instructions pour configurer le projet iOS
