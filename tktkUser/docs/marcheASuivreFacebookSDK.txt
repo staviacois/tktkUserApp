@@ -123,3 +123,15 @@ Depuis là, créer l'app facebook ou en choisir une existante, et suivre les ins
 
 Accéder à ce lien : https://developers.facebook.com/quickstarts/?platform=ios
 Depuis là, créer l'app facebook ou en choisir une existante, et suivre les instructions pour configurer le projet iOS
+
+
+
+----------------------------------------------------
+------------------ Configurer le serveur :
+
+Ajouter ces paramètres dans le fichier settings du serveur meteor (dans "private") :
+"appFB": {
+  "appId": "App ID",
+  "appSecret": "App secret",
+  "apiVersion": "v2.8"
+}
