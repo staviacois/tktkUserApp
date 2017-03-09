@@ -40,32 +40,42 @@ function getUserInfos(cbSuccess, cbError) {
 
       const cbSuccess2 = (res) => {
 
-        console.log(result);
+        const infosUser = {};
+        if (result["last_name"]) infosUser.lastname = result["last_name"];
+        if (result["first_name"]) infosUser.firstname = result["first_name"];
+        if (result["email"]) infosUser.email = result["email"];
 
-        new GraphRequestManager().addRequest(new GraphRequest('/' + result["location"].id, {
-          httpMethod: 'GET',
-          version: 'v2.8',
-          parameters: {
-            fields: {
-              string: 'location'
-            }
-          }
-        }, (error0, result0) => {
-          if (error0) {
-            cbError(error0);
-          } else {
-            const data = {
-              accessToken: res.accessToken,
-              infosUser: {
-                lastname: result["last_name"],
-                firstname: result["first_name"],
-                email: result["email"],
-                city: result0["location"].city
+        if (result["location"] && result["location"].id) {
+          new GraphRequestManager().addRequest(new GraphRequest('/' + result["location"].id, {
+            httpMethod: 'GET',
+            version: 'v2.8',
+            parameters: {
+              fields: {
+                string: 'location'
               }
             }
-            cbSuccess(data);
-          }
-        })).start();
+          }, (error0, result0) => {
+            if (error0) {
+              cbError(error0);
+            } else {
+              if (result0["location"] && result0["location"].city) infosUser.city = result0["location"].city;
+
+              const data = {
+                accessToken: res.accessToken,
+                infosUser: infosUser
+              };
+
+              cbSuccess(data);
+            }
+          })).start();
+        } else {
+          const data = {
+            accessToken: res.accessToken,
+            infosUser: infosUser
+          };
+
+          cbSuccess(data);
+        }
       };
 
       AccessToken.getCurrentAccessToken().then(cbSuccess2, cbError);
