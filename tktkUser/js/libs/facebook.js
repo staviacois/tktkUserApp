@@ -40,7 +40,7 @@ function getUserInfos(cbSuccess, cbError) {
 
       const cbSuccess2 = (res) => {
 
-        console.log("1");
+        console.log(result);
 
         new GraphRequestManager().addRequest(new GraphRequest('/' + result["location"].id, {
           httpMethod: 'GET',

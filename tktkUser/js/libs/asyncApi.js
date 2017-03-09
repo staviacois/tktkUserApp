@@ -9,15 +9,20 @@ function getText(code) {
 }
 
 function init() {
-   Meteor.connect('ws://10.7.26.78:3000/websocket');
-   //Meteor.connect('ws://192.168.1.112:3000/websocket');
-   //Meteor.connect('https://app.jumpthequeue.ch/websocket');
-   /*
-  if(Platform.OS === 'ios')
-    Meteor.connect('https://app.jumpthequeue.ch/websocket');
-  else if(Platform.OS === 'android')
-    Meteor.connect('ws://app.jumpthequeue.ch/websocket');
-    */
+   let dev = true;
+   let server = "";
+   if (dev) server = '10.7.26.77:3000'; // 10.7.26.77 192.168.1.112
+
+   if(Platform.OS === 'ios')
+     server = dev ? "http://" + server : "https://" + server;
+   else if(Platform.OS === 'android')
+     server = dev ? "ws://" + server : "ws://" + server;
+
+   server = server + '/websocket';
+   //server = 'http://10.7.26.77:3000/websocket';
+
+
+   Meteor.connect(server);
 }
 
 function checkConnection() {
