@@ -59,7 +59,7 @@ export default class SignInView extends Component {
         if (this.validateForm()) {
 
           const payload = {
-            email: this.state.email,
+            email: this.state.email.toLowerCase(),
             hashmdp: this.state.password,
             loginlevel: 1
           }

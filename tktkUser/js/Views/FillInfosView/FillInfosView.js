@@ -76,7 +76,7 @@ export default class FillInfosView extends Component {
             userInfos: {
               name: this.state.lastname,
               firstname: this.state.firstname,
-              email: this.state.email,
+              email: this.state.email.toLowerCase(),
               phonenbr: this.state.tel,
               npa: this.state.npa,
               street: this.state.street,

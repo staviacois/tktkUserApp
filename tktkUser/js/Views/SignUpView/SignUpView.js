@@ -74,7 +74,7 @@ export default class SignUpView extends Component {
           const payload = {
             name: this.state.lastname,
             firstname: this.state.firstname,
-            email: this.state.email,
+            email: this.state.email.toLowerCase(),
             phonenbr: this.state.tel,
             hashmdp1: this.state.password,
             npa: this.state.npa,
